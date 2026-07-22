@@ -1,0 +1,1 @@
+-- No extensions required for now. UUIDv7 is generated in Go application layer.

@@ -1,0 +1,1 @@
+#!/bin/bash\necho "Killing Meilisearch..."\ndocker-compose stop meilisearch\necho "Expect worker pending queue buildup. Restore via docker-compose start meilisearch."\n

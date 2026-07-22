@@ -1,0 +1,1 @@
+#!/bin/bash\necho "Injecting 500ms network delay via tc..."\n# Mock tc command\necho "Latency injected. Run Search benchmark to observe degradation."\n

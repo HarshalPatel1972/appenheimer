@@ -1,0 +1,1 @@
+#!/bin/bash\n# Trigger search reindex via API or CLI

@@ -1,0 +1,33 @@
+/* Global Reset and Dark Mode Foundation */
+:root {
+  /* Semantic Colors (Dark Mode Only) */
+  --bg-primary: #0a0a0a;
+  --bg-surface: #1a1a1a;
+  --text-main: #ffffff;
+  --text-muted: #a1a1aa;
+  --border-subtle: #27272a;
+  --color-primary: #3b82f6;
+  --color-error: #ef4444;
+
+  /* Typography */
+  --font-sans: 'Inter', system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Accessibility: Respect Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

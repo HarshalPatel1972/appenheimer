@@ -1,0 +1,32 @@
+openapi: 3.0.3
+info:
+  title: Appenheimer API
+  version: 1.0.0
+paths:
+  /api/v1/search:
+    get:
+      summary: Search Applications
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/App'
+components:
+  schemas:
+    App:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string

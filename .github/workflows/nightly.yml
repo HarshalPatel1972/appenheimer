@@ -1,0 +1,58 @@
+name: Nightly / Full Suite
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  playwright:
+    name: E2E, Visual, and Accessibility
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+      - name: Install dependencies
+        run: cd frontend && npm ci
+      - name: Install Playwright Browsers
+        run: cd frontend && npx playwright install --with-deps
+      - name: Run Playwright Tests (E2E)
+        run: cd frontend && npx playwright test ../tests/e2e
+      - name: Run Visual Regression Tests
+        run: cd frontend && npx playwright test ../tests/visual
+      - name: Run Accessibility Audit
+        run: cd frontend && npx playwright test ../tests/accessibility
+
+  performance:
+    name: Performance Baseline
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install k6
+        run: |
+          sudo gpg -k
+          sudo gpg --no-default-keyring --keyring /usr/share/keyrings/k6-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
+          echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+          sudo apt-get update
+          sudo apt-get install k6
+      - name: Run Mixed Traffic Benchmark
+        run: k6 run tests/performance/mixed_traffic.js
+
+  chaos:
+    name: Chaos Engineering Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Redis Kill Test
+        run: bash tests/chaos/kill-redis.sh
+      - name: Meilisearch Kill Test
+        run: bash tests/chaos/kill-meili.sh
+      - name: Postgres Kill Test
+        run: bash tests/chaos/kill-pg.sh
+      - name: Worker Kill Test
+        run: bash tests/chaos/kill-worker.sh

@@ -1,0 +1,30 @@
+- name: Figma
+  slug: figma
+  organization: Figma
+  website: https://figma.com
+  categories:
+    - Design
+  platforms:
+    - Web
+    - Windows
+    - macOS
+  pricing:
+    - Free
+    - Paid
+  aliases:
+    - figma editor
+  links:
+    github: ""
+    docs: ""
+    discord: ""
+  media:
+    - figma-1.webp
+
+- name: Figma Pro
+  slug: figma   # Duplicate slug to trigger idempotent update logic
+  organization: Figma
+  website: https://figma.com
+
+- name: Bad App
+  slug:         # Missing slug to trigger validation failure
+  organization: Bad Org

@@ -1,0 +1,1 @@
+#!/bin/bash\ndocker-compose logs -f

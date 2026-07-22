@@ -1,0 +1,26 @@
+# Node
+node_modules/
+dist/
+build/
+.svelte-kit/
+
+# Go
+backend/api
+coverage.txt
+coverage.out
+
+# Docker/Data
+postgres-data/
+redis-data/
+meili_data/
+backups/
+
+# Environment variables
+.env
+.env.production
+.env.local
+
+# IDE
+.vscode/
+.idea/
+.DS_Store

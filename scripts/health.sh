@@ -1,0 +1,1 @@
+#!/bin/bash\ncurl -s http://localhost/health/ready | jq

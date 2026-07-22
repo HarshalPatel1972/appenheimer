@@ -1,0 +1,1 @@
+#!/bin/bash\necho "Killing Redis..."\ndocker-compose stop redis\necho "Expect cache bypass. Run mixed traffic benchmark now."\n

@@ -1,0 +1,1 @@
+// Mock admin.js

@@ -1,0 +1,1 @@
+#!/bin/bash\n# Execute seed script against DB

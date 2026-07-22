@@ -1,0 +1,1 @@
+#!/bin/bash\necho "Killing PostgreSQL..."\ndocker-compose stop postgres\necho "Expect immediate /health/ready failure. Re-start to test connection retry loop."\n

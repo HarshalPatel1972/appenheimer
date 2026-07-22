@@ -1,0 +1,1 @@
+// Mock publish.js

@@ -1,0 +1,1 @@
+#!/bin/bash\n# Execute migrate up against the DB container

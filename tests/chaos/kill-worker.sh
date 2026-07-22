@@ -1,0 +1,1 @@
+#!/bin/bash\necho "Killing Outbox Worker mid-processing..."\ndocker-compose stop worker\necho "Expect Reclaimer to pick up abandoned lock after 5m timeout upon restart."\n

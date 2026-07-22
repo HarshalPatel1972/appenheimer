@@ -1,0 +1,1 @@
+# Worker Recovery Runbook\nRestart worker container. It will resume processing pending Outbox events automatically.

@@ -1,0 +1,1 @@
+#!/bin/bash\n# Placeholder for restore pipeline

@@ -1,0 +1,25 @@
+
+# Automatic HTTPS via Let's Encrypt
+appenheimer.com {
+    
+    # Compress responses
+    encode zstd gzip
+
+    # Proxy API requests to Go Backend
+    handle /api/* {
+        reverse_proxy backend:8080
+    }
+    
+    handle /health/* {
+        reverse_proxy backend:8080
+    }
+    
+    handle /metrics {
+        reverse_proxy backend:8080
+    }
+
+    # Proxy everything else to the Frontend
+    handle {
+        reverse_proxy frontend:80
+    }
+}
