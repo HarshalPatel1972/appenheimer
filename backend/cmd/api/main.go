@@ -2,44 +2,109 @@ package main
 
 import (
 	"context"
-	"log"
+	"log/slog"
 	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
+	"github.com/appenheimer/backend/internal/config"
+	"github.com/appenheimer/backend/internal/database/postgres"
+	"github.com/appenheimer/backend/internal/events"
 	"github.com/appenheimer/backend/internal/search"
 	"github.com/appenheimer/backend/internal/search/indexer"
+	"github.com/appenheimer/backend/internal/server"
+	"github.com/appenheimer/backend/internal/worker"
 )
 
 func main() {
-	cfg := search.Config{
-		Provider:  os.Getenv("SEARCH_PROVIDER"),
-		Host:      "http://localhost:7700",
-		APIKey:    "masterKey",
-		IndexName: "apps",
+	logger := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelDebug}))
+	slog.SetDefault(logger)
+
+	// 1. Configuration
+	cfg, err := config.Load()
+	if err != nil {
+		logger.Error("failed to load config", "error", err)
+		os.Exit(1)
 	}
 
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	// 2. Database
+	db, err := postgres.New(ctx, cfg.DatabaseURL)
+	if err != nil {
+		logger.Error("database connection failed", "error", err)
+		os.Exit(1)
+	}
+	defer db.Close()
+	logger.Info("connected to postgres database")
+
+	// 3. Search Provider
 	var searchProvider search.SearchProvider
-
-	if cfg.Provider == "meilisearch" {
-		meili := indexer.NewMeiliIndexer(cfg)
-		
-		// 1. Validate connection & health
-		stats, err := meili.Health(context.Background())
+	if cfg.SearchProvider == "meilisearch" {
+		meiliCfg := search.Config{
+			Provider:  cfg.SearchProvider,
+			Host:      cfg.SearchHost,
+			APIKey:    cfg.SearchAPIKey,
+			IndexName: cfg.SearchIndex,
+		}
+		meili := indexer.NewMeiliIndexer(meiliCfg)
+		stats, err := meili.Health(ctx)
 		if err != nil || !stats.IsHealthy {
-			log.Fatalf("FATAL: Meilisearch unhealthy during boot: %v", err)
+			logger.Error("meilisearch unhealthy", "error", err)
+		} else {
+			if err := meili.EnsureIndex(ctx); err != nil {
+				logger.Error("meilisearch index configuration failed", "error", err)
+			}
+			logger.Info("connected to meilisearch")
+			searchProvider = meili
 		}
-		
-		// 2. Ensure settings
-		if err := meili.EnsureIndex(context.Background()); err != nil {
-			log.Fatalf("FATAL: Meilisearch index configuration failed: %v", err)
-		}
-		
-		log.Println("Successfully connected to Meilisearch Search Provider.")
-		searchProvider = meili
-		_ = searchProvider // Use in handlers
-	} else {
-		log.Println("Using default Postgres Search Provider.")
-		// searchProvider = postgresProvider
 	}
-	
-	// Boot server...
+
+	if searchProvider == nil {
+		// Fallback to postgres search
+		logger.Info("using postgres search provider")
+		// Postgres search provider is instantiated directly or handled internally
+		// (Assuming handlers will fallback to db.Queries().SearchApps)
+	}
+
+	// 4. Events & Worker
+	registry := events.NewRegistry()
+	// Register handlers here if needed
+	// registry.Register("app.published", handlers.NewAppPublishedHandler(...))
+
+	wrkr := worker.NewWorker(db, registry, "worker-1")
+	workerCtx, workerCancel := context.WithCancel(context.Background())
+	defer workerCancel()
+	wrkr.Start(workerCtx)
+	logger.Info("background worker started")
+
+	// 5. HTTP Server
+	srv := server.New(cfg, logger, db)
+
+	go func() {
+		if err := srv.Start(); err != nil {
+			logger.Error("http server stopped", "error", err)
+		}
+	}()
+
+	// 6. Graceful Shutdown
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
+	<-quit
+
+	logger.Info("graceful shutdown initiated")
+
+	shutdownCtx, shutdownCancel := context.WithTimeout(context.Background(), 15*time.Second)
+	defer shutdownCancel()
+
+	if err := srv.Shutdown(shutdownCtx); err != nil {
+		logger.Error("server forced to shutdown", "error", err)
+	}
+
+	workerCancel()
+	wrkr.Stop()
+
+	logger.Info("graceful shutdown complete")
 }

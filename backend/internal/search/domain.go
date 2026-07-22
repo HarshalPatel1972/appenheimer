@@ -25,8 +25,8 @@ type App struct {
 
 type AppDetails struct {
 	App
-	Developer   string
-	WebsiteURL  string
+	Developer  string
+	WebsiteURL string
 
 	Screenshots []string
 }

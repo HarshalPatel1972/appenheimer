@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"context"
 	"net/http"
 
 	"github.com/appenheimer/backend/internal/rbac"
@@ -11,18 +10,13 @@ import (
 
 func LoadSession(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Validates cookie, loads session ID
-		// Expiration rolling update
-		next.ServeHTTP(w, r)
+		http.Error(w, "401 Unauthorized", http.StatusUnauthorized)
 	})
 }
 
 func LoadUser(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Uses session ID to load user
-		// Checks is_active
-		// Injects identity into context
-		next.ServeHTTP(w, r)
+		http.Error(w, "401 Unauthorized", http.StatusUnauthorized)
 	})
 }
 

@@ -2,7 +2,6 @@ package worker
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"sync"
 	"time"
@@ -32,7 +31,7 @@ func NewWorker(db *postgres.DB, registry *events.Registry, id string) *Worker {
 func (w *Worker) Start(ctx context.Context) {
 	w.wg.Add(1)
 	go w.pollLoop(ctx)
-	
+
 	w.wg.Add(1)
 	go w.reclaimLoop(ctx)
 }
@@ -45,7 +44,7 @@ func (w *Worker) Stop() {
 
 func (w *Worker) pollLoop(ctx context.Context) {
 	defer w.wg.Done()
-	
+
 	for {
 		select {
 		case <-w.quit:
@@ -65,7 +64,7 @@ func (w *Worker) pollLoop(ctx context.Context) {
 
 func (w *Worker) processBatch(ctx context.Context) int {
 	var events []sqlc.OutboxEvent
-	
+
 	// Transaction to claim events
 	err := w.db.WithTx(ctx, func(q *sqlc.Queries) error {
 		claimed, err := q.ClaimEvents(ctx, sqlc.ClaimEventsParams{
@@ -78,16 +77,16 @@ func (w *Worker) processBatch(ctx context.Context) int {
 		events = claimed
 		return nil
 	})
-	
+
 	if err != nil || len(events) == 0 {
 		return 0
 	}
-	
+
 	// Process outside the transaction
 	for _, event := range events {
 		w.processSingleEvent(ctx, event)
 	}
-	
+
 	return len(events)
 }
 
@@ -97,23 +96,24 @@ func (w *Worker) processSingleEvent(ctx context.Context, event sqlc.OutboxEvent)
 		w.handleFailure(ctx, event, err)
 		return
 	}
-	
+
 	err = handler.Handle(ctx, event)
 	if err != nil {
 		w.handleFailure(ctx, event, err)
 		return
 	}
-	
+
 	w.db.Queries().MarkEventCompleted(ctx, event.ID)
 	log.Printf("[worker:%s] processed event:%s type:%s", w.id, event.ID, event.EventType)
 }
 
 func (w *Worker) handleFailure(ctx context.Context, event sqlc.OutboxEvent, err error) {
 	maxRetries := int32(5)
+	errStr := err.Error()
 	if event.Attempts >= maxRetries {
 		w.db.Queries().MarkEventDead(ctx, sqlc.MarkEventDeadParams{
 			ID:        event.ID,
-			LastError: &err.Error(),
+			LastError: &errStr,
 		})
 		log.Printf("[worker:%s] DEAD event:%s type:%s err:%v", w.id, event.ID, event.EventType, err)
 		return
@@ -122,10 +122,10 @@ func (w *Worker) handleFailure(ctx context.Context, event sqlc.OutboxEvent, err 
 	// Exponential backoff
 	backoff := time.Duration(1<<event.Attempts) * 5 * time.Second
 	nextAttempt := time.Now().Add(backoff)
-	
+
 	w.db.Queries().MarkEventFailed(ctx, sqlc.MarkEventFailedParams{
 		ID:            event.ID,
-		LastError:     &err.Error(),
+		LastError:     &errStr,
 		NextAttemptAt: nextAttempt,
 	})
 	log.Printf("[worker:%s] FAILED event:%s type:%s attempt:%d err:%v", w.id, event.ID, event.EventType, event.Attempts+1, err)
@@ -135,7 +135,7 @@ func (w *Worker) reclaimLoop(ctx context.Context) {
 	defer w.wg.Done()
 	ticker := time.NewTicker(1 * time.Minute)
 	defer ticker.Stop()
-	
+
 	for {
 		select {
 		case <-w.quit:

@@ -38,9 +38,9 @@ func RequestID() Middleware {
 			b := make([]byte, 8)
 			rand.Read(b)
 			reqID := hex.EncodeToString(b)
-			
+
 			w.Header().Set("X-Request-ID", reqID)
-			
+
 			// Optional: Attach reqID to request context if needed internally
 			next.ServeHTTP(w, r)
 		})
@@ -63,17 +63,17 @@ func Logging(log *slog.Logger) Middleware {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			start := time.Now()
 			reqID := w.Header().Get("X-Request-ID")
-			
+
 			log.Info("request started", "method", r.Method, "path", r.URL.Path, "req_id", reqID)
-			
+
 			rw := &responseRecorder{ResponseWriter: w, statusCode: http.StatusOK}
 			next.ServeHTTP(rw, r)
-			
-			log.Info("request completed", 
-				"method", r.Method, 
-				"path", r.URL.Path, 
+
+			log.Info("request completed",
+				"method", r.Method,
+				"path", r.URL.Path,
 				"status", rw.statusCode,
-				"duration", time.Since(start).String(), 
+				"duration", time.Since(start).String(),
 				"req_id", reqID,
 			)
 		})

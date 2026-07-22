@@ -9,6 +9,7 @@ import (
 
 	v1 "github.com/appenheimer/backend/internal/api/v1"
 	"github.com/appenheimer/backend/internal/config"
+	"github.com/appenheimer/backend/internal/database/postgres"
 )
 
 type Server struct {
@@ -16,23 +17,23 @@ type Server struct {
 	log        *slog.Logger
 }
 
-func New(cfg *config.Config, log *slog.Logger) *Server {
+func New(cfg *config.Config, logger *slog.Logger, db *postgres.DB) *Server {
 	mux := http.NewServeMux()
-	
+
 	// Mount V1 routes
-	v1.RegisterRoutes(mux)
-	
+	v1.RegisterRoutes(mux, db)
+
 	// Apply Middleware in strict order:
 	// Recovery -> Request ID -> Logging -> Compression -> Routes
 	handler := Chain(mux,
-		Recovery(log),
+		Recovery(logger),
 		RequestID(),
-		Logging(log),
+		Logging(logger),
 		Compression(),
 	)
 
 	return &Server{
-		log: log,
+		log: logger,
 		httpServer: &http.Server{
 			Addr:              fmt.Sprintf(":%d", cfg.Port),
 			Handler:           handler,

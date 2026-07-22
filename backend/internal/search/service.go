@@ -41,9 +41,9 @@ func uniqueStrings(in []string, newVals []string) []string {
 
 func ExecuteSearch(query string, filters *FilterCriteria) SearchResult {
 	query = strings.ToLower(strings.TrimSpace(query))
-	
+
 	var matched []App
-	
+
 	avail := AvailableFilters{
 		Platforms:  []string{},
 		Pricing:    []string{},
@@ -73,28 +73,28 @@ func ExecuteSearch(query string, filters *FilterCriteria) SearchResult {
 				}
 			}
 		}
-		
+
 		if !isMatch {
 			continue
 		}
-		
+
 		// 2. Filter Match (OR within, AND between)
 		if filters != nil {
 			if !intersect(app.Platforms, filters.Platforms) ||
-			   !intersect(app.Pricing, filters.Pricing) ||
-			   !intersect(app.Categories, filters.Categories) {
+				!intersect(app.Pricing, filters.Pricing) ||
+				!intersect(app.Categories, filters.Categories) {
 				continue
 			}
 		}
-		
+
 		// 3. Accumulate Available Filters
 		avail.Platforms = uniqueStrings(avail.Platforms, app.Platforms)
 		avail.Pricing = uniqueStrings(avail.Pricing, app.Pricing)
 		avail.Categories = uniqueStrings(avail.Categories, app.Categories)
-		
+
 		matched = append(matched, app)
 	}
-	
+
 	// 4. Sort
 	sort.SliceStable(matched, func(i, j int) bool {
 		if matched[i].SearchWeight == matched[j].SearchWeight {
@@ -102,9 +102,9 @@ func ExecuteSearch(query string, filters *FilterCriteria) SearchResult {
 		}
 		return matched[i].SearchWeight > matched[j].SearchWeight
 	})
-	
+
 	return SearchResult{
-		Apps: matched,
+		Apps:             matched,
 		AvailableFilters: avail,
 	}
 }

@@ -1,7 +1,5 @@
 package ingestion
 
-import "github.com/google/uuid"
-
 type Severity string
 
 const (

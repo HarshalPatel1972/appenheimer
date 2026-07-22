@@ -14,11 +14,11 @@ type DB struct {
 func New(ctx context.Context, connectionString string) (*DB, error) {
 	pool, err := pgxpool.New(ctx, connectionString)
 	if err != nil {
-		return nil, fmt.Errorf("unable to connect to database: %w", err)
+		return nil, fmt.Errorf("unable to configure database pool: %w", err)
 	}
 
 	if err := pool.Ping(ctx); err != nil {
-		return nil, fmt.Errorf("unable to ping database: %w", err)
+		return nil, fmt.Errorf("database unavailable: %w", err)
 	}
 
 	return &DB{pool: pool}, nil

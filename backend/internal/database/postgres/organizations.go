@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/appenheimer/backend/internal/database/postgres/sqlc"
-	"github.com/jackc/pgx/v5/pgtype"
+	"github.com/google/uuid"
 )
 
 type OrganizationsRepository struct {
@@ -19,6 +19,6 @@ func (r *OrganizationsRepository) Create(ctx context.Context, params sqlc.Create
 	return r.db.Queries().CreateOrganization(ctx, params)
 }
 
-func (r *OrganizationsRepository) Get(ctx context.Context, id pgtype.UUID) (sqlc.Organization, error) {
+func (r *OrganizationsRepository) Get(ctx context.Context, id uuid.UUID) (sqlc.Organization, error) {
 	return r.db.Queries().GetOrganization(ctx, id)
 }

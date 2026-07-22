@@ -21,7 +21,7 @@ func NewContextHandler() *slog.Logger {
 func Info(ctx context.Context, msg string, args ...any) {
 	spanCtx := trace.SpanFromContext(ctx).SpanContext()
 	traceID := spanCtx.TraceID().String()
-	
+
 	// Inject trace_id safely
 	combined := append(args, slog.String("trace_id", traceID))
 	slog.InfoContext(ctx, msg, combined...)

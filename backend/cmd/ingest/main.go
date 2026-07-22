@@ -42,7 +42,7 @@ func main() {
 	defer db.Close()
 
 	pipeline := ingestion.NewPipeline(db)
-	
+
 	fmt.Printf("Starting Import Pipeline... [Dry Run: %v]\n", dryRun)
 	report, err := pipeline.Run(ctx, yamlData, source, dryRun)
 	if err != nil {

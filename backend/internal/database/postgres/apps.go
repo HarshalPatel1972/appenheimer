@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/appenheimer/backend/internal/database/postgres/sqlc"
-	"github.com/jackc/pgx/v5/pgtype"
+	"github.com/google/uuid"
 )
 
 type AppsRepository struct {
@@ -19,6 +19,6 @@ func (r *AppsRepository) Create(ctx context.Context, params sqlc.CreateAppParams
 	return r.db.Queries().CreateApp(ctx, params)
 }
 
-func (r *AppsRepository) Get(ctx context.Context, id pgtype.UUID) (sqlc.App, error) {
+func (r *AppsRepository) Get(ctx context.Context, id uuid.UUID) (sqlc.App, error) {
 	return r.db.Queries().GetApp(ctx, id)
 }

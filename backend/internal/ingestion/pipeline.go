@@ -39,7 +39,7 @@ func (p *Pipeline) Run(ctx context.Context, yamlData []byte, source string, dryR
 			// In a real app we'd insert into imports table here
 		}
 
-		for _, app := := range apps {
+		for _, app := range apps {
 			p.processApp(ctx, q, app, report)
 		}
 
@@ -60,7 +60,7 @@ func (p *Pipeline) processApp(ctx context.Context, q *sqlc.Queries, app Canonica
 	// PHASE 2: Normalize
 	app.Slug = strings.ToLower(strings.TrimSpace(app.Slug))
 	app.Name = strings.TrimSpace(app.Name)
-	
+
 	if app.Slug == "" {
 		report.AddEvent("unknown", SeverityError, "App is missing required 'slug'")
 		report.Skipped++
@@ -79,7 +79,7 @@ func (p *Pipeline) processApp(ctx context.Context, q *sqlc.Queries, app Canonica
 
 	// PHASE 5: Deduplicate (Idempotent check)
 	existing, err := q.GetAppBySlug(ctx, app.Slug)
-	
+
 	// PHASE 6: Import
 	if err == nil && existing.ID != uuid.Nil {
 		// Update

@@ -3,8 +3,8 @@ package events
 import (
 	"context"
 	"encoding/json"
-	"github.com/google/uuid"
 	"github.com/appenheimer/backend/internal/database/postgres/sqlc"
+	"github.com/google/uuid"
 )
 
 type Dispatcher struct {
@@ -22,9 +22,8 @@ func (d *Dispatcher) Publish(ctx context.Context, eventType string, aggregateID 
 	}
 
 	return d.q.CreateOutboxEvent(ctx, sqlc.CreateOutboxEventParams{
-		ID:          uuid.New(),
-		EventType:   eventType,
-		Payload:     payloadBytes,
-		Status:      "pending",
+		ID:        uuid.New(),
+		EventType: eventType,
+		Payload:   payloadBytes,
 	})
 }

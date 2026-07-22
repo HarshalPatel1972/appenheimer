@@ -35,7 +35,7 @@ func NewSearchCacheDecorator(inner SearchProvider, cache Cache, ttl time.Duratio
 
 func (d *SearchCacheDecorator) Search(ctx context.Context, req SearchRequest) (SearchResponse, error) {
 	key := generateCacheKey(req)
-	
+
 	cached, err := d.cache.Get(ctx, key)
 	if err == nil && cached != nil {
 		var res SearchResponse
@@ -43,25 +43,25 @@ func (d *SearchCacheDecorator) Search(ctx context.Context, req SearchRequest) (S
 			return res, nil
 		}
 	}
-	
+
 	res, err := d.inner.Search(ctx, req)
 	if err != nil {
 		return res, err
 	}
-	
+
 	bytes, _ := json.Marshal(res)
 	_ = d.cache.Set(ctx, key, bytes, d.ttl)
-	
+
 	return res, nil
 }
 
 func generateCacheKey(req SearchRequest) string {
 	q := strings.ToLower(strings.TrimSpace(req.Query))
-	
+
 	// Deduplicate and Sort Arrays
 	plats := dedupeAndSort(req.Platforms)
 	cats := dedupeAndSort(req.Categories)
-	
+
 	canonical := struct {
 		Q string
 		P []string
@@ -71,7 +71,7 @@ func generateCacheKey(req SearchRequest) string {
 		P: plats,
 		C: cats,
 	}
-	
+
 	bytes, _ := json.Marshal(canonical)
 	hash := sha256.Sum256(bytes)
 	return "search:query:" + hex.EncodeToString(hash[:])

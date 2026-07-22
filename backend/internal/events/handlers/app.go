@@ -2,10 +2,10 @@ package handlers
 
 import (
 	"context"
-	
+	"errors"
+
 	"github.com/appenheimer/backend/internal/database/postgres/sqlc"
 	"github.com/appenheimer/backend/internal/search"
-	"github.com/appenheimer/backend/internal/search/projection"
 )
 
 type AppPublishedHandler struct {
@@ -18,13 +18,7 @@ func NewAppPublishedHandler(q *sqlc.Queries, p search.IndexProvider) *AppPublish
 }
 
 func (h *AppPublishedHandler) Handle(ctx context.Context, event sqlc.OutboxEvent) error {
-	// Parse aggregate_id and fetch from DB (mocked for compilation)
-	graph := projection.FullAppGraph{
-		App: nil,
-	}
-	
-	doc := projection.BuildDocument(graph)
-	return h.provider.Upsert(ctx, doc)
+	return errors.New("not implemented: event parsing and projection mapping")
 }
 
 type AppArchivedHandler struct {
@@ -36,5 +30,5 @@ func NewAppArchivedHandler(p search.IndexProvider) *AppArchivedHandler {
 }
 
 func (h *AppArchivedHandler) Handle(ctx context.Context, event sqlc.OutboxEvent) error {
-	return h.provider.Delete(ctx, "mock-id")
+	return errors.New("not implemented: event archiving")
 }

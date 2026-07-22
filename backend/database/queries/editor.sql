@@ -3,7 +3,7 @@
 DELETE FROM aliases WHERE app_id = $1;
 
 -- name: CreateAppAlias :exec
-INSERT INTO aliases (id, app_id, name) VALUES ($1, $2, $3);
+INSERT INTO aliases (id, app_id, alias) VALUES ($1, $2, $3);
 
 -- name: DeleteAppLinks :exec
 DELETE FROM app_links WHERE app_id = $1;
@@ -15,7 +15,7 @@ INSERT INTO app_links (id, app_id, link_type, url) VALUES ($1, $2, $3, $4);
 DELETE FROM media WHERE app_id = $1;
 
 -- name: CreateAppMedia :exec
-INSERT INTO media (id, app_id, object_key, media_type, "order") VALUES ($1, $2, $3, $4, $5);
+INSERT INTO media (id, app_id, media_key, media_type, order_index) VALUES ($1, $2, $3, $4, $5);
 
 -- name: DeleteAppCategories :exec
 DELETE FROM app_categories WHERE app_id = $1;
