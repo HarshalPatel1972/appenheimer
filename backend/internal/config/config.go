@@ -33,7 +33,7 @@ func Load() (*Config, error) {
 
 	dbURL := os.Getenv("DATABASE_URL")
 	if dbURL == "" {
-		dbURL = "postgres://postgres:postgres@localhost:5432/appenheimer?sslmode=disable"
+		return nil, fmt.Errorf("DATABASE_URL environment variable is required")
 	}
 
 	searchProvider := os.Getenv("SEARCH_PROVIDER")
