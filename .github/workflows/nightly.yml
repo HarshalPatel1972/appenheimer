@@ -41,7 +41,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install k6
       - name: Run Mixed Traffic Benchmark
-        run: k6 run tests/performance/mixed_traffic.js
+        run: k6 run tests/performance/k6/mixed_traffic.js
 
   chaos:
     name: Chaos Engineering Tests
