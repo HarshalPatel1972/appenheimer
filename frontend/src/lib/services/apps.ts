@@ -1,5 +1,6 @@
 import { detailsStore } from '$lib/state/details.svelte';
 import type { AppDetails } from '$lib/types/search';
+import { http } from '$lib/api/http';
 
 const CACHE_TTL_MS = 10 * 60 * 1000; // 10 minutes
 const cache = new Map<string, { data: AppDetails, expiresAt: number }>();
@@ -36,20 +37,16 @@ export async function fetchAppDetails(id: string) {
 
 	fetching.add(id);
 	try {
-		const res = await fetch(`/api/v1/apps/${id}`);
-		if (res.ok) {
-			const data = await res.json();
-			cache.set(id, { data, expiresAt: Date.now() + CACHE_TTL_MS });
-			if (detailsStore.activeAppId === id) {
-				detailsStore.appDetails = data;
-			}
-		} else {
-			if (detailsStore.activeAppId === id) {
-				detailsStore.appDetails = null;
-			}
+		const data = await http(`/api/v1/apps/${id}`);
+		cache.set(id, { data, expiresAt: Date.now() + CACHE_TTL_MS });
+		if (detailsStore.activeAppId === id) {
+			detailsStore.appDetails = data;
 		}
 	} catch (err) {
 		console.error("Failed to fetch app details", err);
+		if (detailsStore.activeAppId === id) {
+			detailsStore.appDetails = null;
+		}
 	} finally {
 		fetching.delete(id);
 		if (detailsStore.activeAppId === id) {
@@ -68,11 +65,8 @@ export async function prefetchAppDetails(id: string) {
 	
 	fetching.add(id);
 	try {
-		const res = await fetch(`/api/v1/apps/${id}`);
-		if (res.ok) {
-			const data = await res.json();
-			cache.set(id, { data, expiresAt: Date.now() + CACHE_TTL_MS });
-		}
+		const data = await http(`/api/v1/apps/${id}`);
+		cache.set(id, { data, expiresAt: Date.now() + CACHE_TTL_MS });
 	} catch (err) {
 		// ignore
 	} finally {

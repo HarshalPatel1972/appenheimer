@@ -1,4 +1,5 @@
 import { searchStore } from '$lib/state/search.svelte';
+import { http } from '$lib/api/http';
 
 let timeoutId: ReturnType<typeof setTimeout>;
 
@@ -9,27 +10,20 @@ export function executeSearch() {
 	
 	timeoutId = setTimeout(async () => {
 		try {
-			const res = await fetch('/api/v1/search', {
+			const data = await http('/api/v1/search', {
 				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
 					query: searchStore.query,
 					filters: searchStore.filters
 				})
 			});
 			
-			if (res.ok) {
-				const data = await res.json();
-				searchStore.results = data.data || [];
-				searchStore.availableFilters = data.availableFilters || null;
-				searchStore.status = 'success';
-			} else {
-				searchStore.status = 'error';
-				searchStore.error = 'Search failed';
-			}
+			searchStore.results = data.data || [];
+			searchStore.availableFilters = data.availableFilters || null;
+			searchStore.status = 'success';
 		} catch (err) {
 			searchStore.status = 'error';
-			searchStore.error = 'Network error';
+			searchStore.error = 'Search failed';
 		}
 	}, 150);
 }
