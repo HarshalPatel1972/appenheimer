@@ -1,9 +1,14 @@
-const apiUrl = import.meta.env.VITE_API_URL;
+let apiUrl = import.meta.env.VITE_API_URL || '';
 
-if (!apiUrl) {
-	console.error('CRITICAL: VITE_API_URL is missing! Requests will fail or hit localhost/vercel directly. Please add it to Vercel Environment Variables and redeploy.');
+if (typeof apiUrl === 'string') {
+	apiUrl = apiUrl.trim();
+}
+
+if (!apiUrl || apiUrl.includes('vercel.app')) {
+	console.error('CRITICAL: VITE_API_URL is missing or incorrectly set to Vercel. Falling back to Render backend.');
+	apiUrl = 'https://appenheimer.onrender.com';
 }
 
 export const ENV = {
-	API_URL: apiUrl || 'https://appenheimer.onrender.com',
+	API_URL: apiUrl,
 };
