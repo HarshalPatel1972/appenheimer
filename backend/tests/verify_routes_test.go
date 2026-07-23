@@ -15,10 +15,10 @@ import (
 
 func TestCaptureHTTPResponses(t *testing.T) {
 	mux := http.NewServeMux()
-	
+
 	ctx := context.Background()
 	db, _ := postgres.New(ctx, "postgres://dummy:dummy@localhost:5432/dummy")
-	
+
 	v1.RegisterRoutes(mux, db)
 
 	server := httptest.NewServer(mux)

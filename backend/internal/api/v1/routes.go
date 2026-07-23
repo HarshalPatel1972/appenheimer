@@ -16,7 +16,7 @@ func RegisterRoutes(mux *http.ServeMux, db *postgres.DB) {
 	mux.HandleFunc("POST /api/v1/search", HandleSearch)
 
 	adminHandler := admin.NewAdminHandler(db)
-	
+
 	// Helper to wrap handlers
 	secure := func(h http.HandlerFunc) http.HandlerFunc {
 		return admin.RequireRole(admin.RoleAdmin)(h).ServeHTTP

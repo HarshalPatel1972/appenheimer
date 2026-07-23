@@ -17,7 +17,7 @@ func NewMeiliIndexer(cfg search.Config) *MeiliIndexer {
 	return &MeiliIndexer{client: nil, config: cfg}
 }
 
-func (m *MeiliIndexer) EnsureIndex(ctx context.Context) error { 
+func (m *MeiliIndexer) EnsureIndex(ctx context.Context) error {
 	return errors.New("not implemented: meilisearch ensure index")
 }
 
@@ -25,7 +25,7 @@ func (m *MeiliIndexer) Upsert(ctx context.Context, docs ...projection.SearchDocu
 	return errors.New("not implemented: meilisearch upsert")
 }
 
-func (m *MeiliIndexer) Delete(ctx context.Context, ids ...string) error { 
+func (m *MeiliIndexer) Delete(ctx context.Context, ids ...string) error {
 	return errors.New("not implemented: meilisearch delete")
 }
 

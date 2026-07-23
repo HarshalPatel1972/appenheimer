@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+
+	"github.com/joho/godotenv"
 )
 
 type Config struct {
@@ -17,6 +19,11 @@ type Config struct {
 }
 
 func Load() (*Config, error) {
+	// Attempt to load .env files from various relative paths (ignore errors if not found, since production sets them directly)
+	_ = godotenv.Load(".env")
+	_ = godotenv.Load("../.env")
+	_ = godotenv.Load("../../.env")
+
 	portStr := os.Getenv("PORT")
 	if portStr == "" {
 		portStr = "8080"
