@@ -337,6 +337,10 @@
 		transform: translate(-2px, -2px);
 	}
 
+	.search-input.compact:focus {
+		transform: none;
+	}
+
 	.content {
 		flex: 1;
 		width: 100%;
