@@ -108,8 +108,8 @@
 	}
 
 	@keyframes fadeIn {
-		from { opacity: 0; transform: scale(0.96); }
-		to { opacity: 1; transform: scale(1); }
+		from { opacity: 0; transform: scale(0.95) translateY(6px); }
+		to   { opacity: 1; transform: scale(1) translateY(0); }
 	}
 
 	.quad-tag {
@@ -121,27 +121,35 @@
 	}
 
 	.top-left {
-		top: 36px;
-		left: 36px;
-		max-width: 380px;
+		top: 24px;
+		left: 24px;
+		max-width: 360px;
+		animation-delay: 0.05s;
+		border-top: 4px solid var(--color-primary);
 	}
 
 	.top-right {
-		top: 36px;
-		right: 36px;
-		max-width: 320px;
+		top: 24px;
+		right: 24px;
+		max-width: 300px;
+		animation-delay: 0.15s;
+		border-top: 4px solid var(--border-subtle);
 	}
 
 	.bottom-left {
-		bottom: 36px;
-		left: 36px;
-		max-width: 380px;
+		bottom: 24px;
+		left: 24px;
+		max-width: 360px;
+		animation-delay: 0.1s;
+		border-top: 4px solid var(--border-subtle);
 	}
 
 	.bottom-right {
-		bottom: 36px;
-		right: 36px;
-		max-width: 300px;
+		bottom: 24px;
+		right: 24px;
+		max-width: 280px;
+		animation-delay: 0.2s;
+		border-top: 4px solid var(--color-primary);
 	}
 
 	.developer {
