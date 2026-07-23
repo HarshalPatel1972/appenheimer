@@ -8,8 +8,15 @@
 	let containerWidth = $state(0);
 	let containerHeight = $state(0);
 	
+	let hasActiveSearch = $derived(
+		searchStore.query.trim().length > 0 || 
+		(searchStore.filters.platforms && searchStore.filters.platforms.length > 0) ||
+		(searchStore.filters.pricing && searchStore.filters.pricing.length > 0) ||
+		(searchStore.filters.categories && searchStore.filters.categories.length > 0)
+	);
+
 	let placedResults = $derived.by(() => {
-		if (searchStore.status === 'success' && containerWidth > 0 && containerHeight > 0) {
+		if (searchStore.status === 'success' && hasActiveSearch && containerWidth > 0 && containerHeight > 0) {
 			return calculateLayout(searchStore.query, searchStore.results, containerWidth, containerHeight);
 		}
 		return [];
@@ -21,7 +28,7 @@
 	bind:clientWidth={containerWidth} 
 	bind:clientHeight={containerHeight}
 >
-	{#if searchStore.status === 'success'}
+	{#if searchStore.status === 'success' && hasActiveSearch}
 		<ul role="list" class="canvas-list">
 			{#each placedResults as result (result.app.id)}
 				<ResultCard {result} centerX={containerWidth / 2} centerY={containerHeight / 2} />

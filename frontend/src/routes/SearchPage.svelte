@@ -46,6 +46,11 @@
 			changed = true;
 		}
 
+		if (!q && platforms.length === 0 && pricings.length === 0 && categories.length === 0) {
+			searchStore.status = 'idle';
+			searchStore.results = [];
+		}
+
 		if (changed) {
 			const newOrder: {type: string, value: string}[] = [];
 			const currentMap = new Map(searchStore.activeFiltersOrder.map(f => [f.type + ':' + f.value, f]));
@@ -65,7 +70,13 @@
 			addFilters('category', categories);
 			
 			searchStore.activeFiltersOrder = newOrder;
-			executeSearch();
+			
+			if (q.trim().length > 0 || newOrder.length > 0) {
+				executeSearch();
+			} else {
+				searchStore.status = 'idle';
+				searchStore.results = [];
+			}
 		}
 
 		if (appId !== detailsStore.activeAppId) {
@@ -88,6 +99,12 @@
 		}
 	});
 
+	let activeApp = $derived(
+		detailsStore.activeAppId 
+			? searchStore.results.find(r => r.id === detailsStore.activeAppId) || null 
+			: null
+	);
+
 	function handleInput(e: Event) {
 		const target = e.target as HTMLInputElement;
 		inputQuery = target.value;
@@ -95,12 +112,18 @@
 			searchStore.setTyping();
 		} else {
 			searchStore.status = 'idle';
+			searchStore.results = [];
 		}
 	}
 
 	function commitSearch() {
 		searchStore.query = inputQuery.trim();
-		executeSearch();
+		if (searchStore.query.length === 0 && searchStore.activeFiltersOrder.length === 0) {
+			searchStore.status = 'idle';
+			searchStore.results = [];
+		} else {
+			executeSearch();
+		}
 		
 		const url = new URL($page.url);
 		if (searchStore.query) {
@@ -159,19 +182,35 @@
 <svelte:window onkeydown={handleKeydown} />
 
 <main class="app-main">
-	<div class="search-bar-container" class:is-active={!!detailsStore.activeAppId}>
-		<input 
-			type="text" 
-			class="search-input" 
-			placeholder="Search for software..." 
-			value={inputQuery}
-			oninput={handleInput}
-			onkeydown={handleInputKeydown}
-		/>
+	<!-- CENTER STAGE (App Badge + Search Bar) -->
+	<div class="center-stage" class:is-active={!!detailsStore.activeAppId}>
+		{#if detailsStore.activeAppId && activeApp}
+			<div class="active-app-badge" transition:fade={{ duration: 200 }}>
+				<div class="active-icon-box">
+					<img src={getIconUrl(activeApp.icon, activeApp.name)} alt={activeApp.name} class="active-icon-img" />
+				</div>
+				<span class="active-app-title">{activeApp.name}</span>
+			</div>
+		{/if}
 
-		<FilterBar />
+		<div class="search-bar-wrapper">
+			<input 
+				type="text" 
+				class="search-input" 
+				class:compact={!!detailsStore.activeAppId}
+				placeholder="Search for software..." 
+				value={inputQuery}
+				oninput={handleInput}
+				onkeydown={handleInputKeydown}
+			/>
+
+			{#if !detailsStore.activeAppId}
+				<FilterBar />
+			{/if}
+		</div>
 	</div>
 	
+	<!-- CANVAS & DRIFTING LOGOS -->
 	<div class="content">
 		{#if searchStore.status === 'idle'}
 			<EmptyState />
@@ -188,7 +227,10 @@
 		{/if}
 	</div>
 
-
+	<!-- 4-CORNER SCATTERED DETAILS VIEW -->
+	{#if detailsStore.activeAppId && activeApp}
+		<AppDetailsView app={activeApp} details={detailsStore.appDetails} />
+	{/if}
 </main>
 
 <style>
@@ -202,22 +244,70 @@
 		position: relative;
 	}
 
-
-	.search-bar-container {
+	.center-stage {
 		position: absolute;
 		top: 50%;
 		left: 50%;
 		transform: translate(-50%, -50%);
-		z-index: 100;
+		z-index: 200;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 16px;
 		width: 100%;
-		max-width: 600px;
+		max-width: 640px;
 		padding: 0 16px;
 		box-sizing: border-box;
-		transition: top 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+		transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 	}
-	
-	.search-bar-container.is-active {
-		transform: translate(20px, -50%); /* Slide slightly to the right to sit beside the logo */
+
+	.center-stage.is-active {
+		max-width: 720px;
+	}
+
+	.active-app-badge {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		background: var(--bg-surface);
+		border: 3px solid var(--border-subtle);
+		box-shadow: 6px 6px 0 rgba(0,0,0,1);
+		padding: 8px 16px;
+		flex-shrink: 0;
+	}
+
+	.active-icon-box {
+		width: 36px;
+		height: 36px;
+		overflow: hidden;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border: 1px solid var(--border-subtle);
+		background: #ffffff;
+	}
+
+	.active-icon-img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.active-app-title {
+		font-size: 1.1rem;
+		font-weight: 800;
+		font-family: var(--font-mono);
+		color: var(--text-main);
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+	}
+
+	.search-bar-wrapper {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		width: 100%;
+		transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 	}
 
 	.search-input {
@@ -229,9 +319,16 @@
 		font-size: 1.2rem;
 		font-weight: 700;
 		box-shadow: 6px 6px 0 rgba(0,0,0,1);
-		transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+		transition: all 0.3s ease;
 		outline: none;
 		border-radius: 0;
+		box-sizing: border-box;
+	}
+
+	.search-input.compact {
+		padding: 10px 16px;
+		font-size: 1rem;
+		max-width: 320px;
 	}
 
 	.search-input:focus {
@@ -245,16 +342,5 @@
 		width: 100%;
 		height: 100%;
 		position: relative;
-	}
-
-	.canvas-dimmer {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		background: rgba(0,0,0,0.5);
-		backdrop-filter: blur(4px);
-		z-index: 500;
 	}
 </style>
