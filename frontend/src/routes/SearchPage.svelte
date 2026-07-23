@@ -29,7 +29,7 @@
 
 		let changed = false;
 		if (q !== searchStore.query) {
-			inputQuery = '';
+			inputQuery = q;
 			searchStore.query = q;
 			changed = true;
 		}
@@ -88,25 +88,18 @@
 		}
 	});
 
-	let queryChips = $derived(searchStore.query.trim() ? searchStore.query.trim().split(/\s+/) : []);
-
 	function handleInput(e: Event) {
 		const target = e.target as HTMLInputElement;
 		inputQuery = target.value;
 		if (inputQuery.trim().length > 0) {
 			searchStore.setTyping();
-		} else if (queryChips.length === 0) {
+		} else {
 			searchStore.status = 'idle';
 		}
 	}
 
 	function commitSearch() {
-		if (inputQuery.trim()) {
-			const current = searchStore.query ? searchStore.query.trim() + ' ' : '';
-			searchStore.query = current + inputQuery.trim();
-			inputQuery = '';
-		}
-		
+		searchStore.query = inputQuery.trim();
 		executeSearch();
 		
 		const url = new URL($page.url);
@@ -122,25 +115,7 @@
 		if (e.key === 'Enter') {
 			e.preventDefault();
 			commitSearch();
-		} else if (e.key === 'Backspace' && inputQuery === '' && queryChips.length > 0) {
-			removeChip(queryChips.length - 1);
 		}
-	}
-
-	function removeChip(index: number) {
-		const newChips = [...queryChips];
-		newChips.splice(index, 1);
-		searchStore.query = newChips.join(' ');
-		
-		executeSearch();
-		
-		const url = new URL($page.url);
-		if (searchStore.query) {
-			url.searchParams.set('q', searchStore.query);
-		} else {
-			url.searchParams.delete('q');
-		}
-		goto(url, { keepFocus: true, noScroll: true, replaceState: true });
 	}
 
 	function closeDrawer() {
@@ -188,22 +163,11 @@
 		<input 
 			type="text" 
 			class="search-input" 
-			placeholder={queryChips.length === 0 ? "Search for software..." : "Add another keyword..."} 
+			placeholder="Search for software..." 
 			value={inputQuery}
 			oninput={handleInput}
 			onkeydown={handleInputKeydown}
 		/>
-		
-		{#if queryChips.length > 0}
-			<div class="query-chips">
-				{#each queryChips as chip, i}
-					<button class="chip" onclick={() => removeChip(i)}>
-						{chip}
-						<span class="remove">✕</span>
-					</button>
-				{/each}
-			</div>
-		{/if}
 
 		<FilterBar />
 	</div>
@@ -242,6 +206,7 @@
 		position: relative;
 	}
 
+
 	.search-bar-container {
 		position: absolute;
 		top: 50%;
@@ -260,55 +225,17 @@
 		padding: 16px 24px;
 		border-radius: 99px;
 		border: 1px solid var(--border-subtle);
-		background: rgba(30,30,30,0.8);
-		backdrop-filter: blur(10px);
+		background: var(--bg-surface);
 		color: var(--text-main);
 		font-size: 1.1rem;
-		box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+		box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 		transition: border-color 0.2s, box-shadow 0.2s;
 		outline: none;
 	}
 
 	.search-input:focus {
 		border-color: var(--color-primary);
-		box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 0 0 2px rgba(59, 130, 246, 0.3);
-	}
-
-	.query-chips {
-		display: flex;
-		gap: 8px;
-		flex-wrap: wrap;
-		justify-content: center;
-		margin-top: 16px;
-	}
-
-	.chip {
-		display: inline-flex;
-		align-items: center;
-		gap: 8px;
-		padding: 6px 14px;
-		background: rgba(59, 130, 246, 0.15);
-		border: 1px solid rgba(59, 130, 246, 0.4);
-		border-radius: 99px;
-		color: var(--text-main);
-		font-size: 0.9rem;
-		cursor: pointer;
-		transition: all 0.2s ease;
-	}
-
-	.chip:hover {
-		background: rgba(239, 68, 68, 0.15);
-		border-color: rgba(239, 68, 68, 0.4);
-	}
-
-	.chip .remove {
-		font-size: 0.8rem;
-		opacity: 0.7;
-	}
-
-	.chip:hover .remove {
-		opacity: 1;
-		color: #f87171;
+		box-shadow: 0 8px 24px rgba(0,0,0,0.1), 0 0 0 2px rgba(37, 99, 235, 0.2);
 	}
 
 	.content {

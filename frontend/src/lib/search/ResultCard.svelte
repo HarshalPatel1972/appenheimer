@@ -142,6 +142,7 @@
 		padding: 16px;
 		box-sizing: border-box;
 		cursor: pointer;
+		box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 		transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), 
 					width 0.4s cubic-bezier(0.22, 1, 0.36, 1), 
 					height 0.4s cubic-bezier(0.22, 1, 0.36, 1),
@@ -160,9 +161,9 @@
 		z-index: 1000;
 		cursor: default;
 		border-radius: 24px;
-		box-shadow: 0 24px 64px rgba(0,0,0,0.8);
+		box-shadow: 0 24px 64px rgba(0,0,0,0.2);
 		background: var(--bg-canvas); /* slightly different background for expanded view */
-		border-color: rgba(255,255,255,0.1);
+		border-color: var(--border-subtle);
 	}
 
 	.result-card:focus-visible {
@@ -173,7 +174,7 @@
 	.result-card.hovered {
 		border-color: var(--color-primary);
 		z-index: 10;
-		box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+		box-shadow: 0 12px 30px rgba(0,0,0,0.15);
 	}
 	
 	.result-card.dimmed {

@@ -1,12 +1,13 @@
 /* Global Reset and Dark Mode Foundation */
 :root {
-  /* Semantic Colors (Dark Mode Only) */
-  --bg-primary: #0a0a0a;
-  --bg-surface: #1a1a1a;
-  --text-main: #ffffff;
-  --text-muted: #a1a1aa;
-  --border-subtle: #27272a;
-  --color-primary: #3b82f6;
+  /* Semantic Colors (Modern Classic Light Mode) */
+  --bg-primary: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-canvas: #f1f5f9;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --border-subtle: #e2e8f0;
+  --color-primary: #2563eb;
   --color-error: #ef4444;
 
   /* Typography */

@@ -52,6 +52,7 @@
 		flex-direction: column;
 		gap: 8px;
 		margin-bottom: 48px;
+		transform: translateY(-150px);
 	}
 
 	.hero-copy h2 {

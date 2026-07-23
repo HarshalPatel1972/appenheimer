@@ -123,7 +123,7 @@
 	}
 	
 	.filter-pill {
-		background: rgba(255,255,255,0.05);
+		background: var(--bg-surface);
 		border: 1px solid var(--border-subtle);
 		color: var(--text-muted);
 		border-radius: 99px;
@@ -135,7 +135,7 @@
 	}
 	
 	.filter-pill:hover {
-		background: rgba(255,255,255,0.1);
+		background: rgba(0,0,0,0.05);
 	}
 	
 	.filter-pill.active {
@@ -148,12 +148,12 @@
 		display: flex;
 		align-items: center;
 		gap: 12px;
-		background: rgba(0,0,0,0.4);
-		backdrop-filter: blur(8px);
+		background: var(--bg-surface);
 		padding: 6px 16px;
 		border-radius: 99px;
 		font-size: 0.85rem;
-		border: 1px solid rgba(255,255,255,0.1);
+		border: 1px solid var(--border-subtle);
+		box-shadow: 0 4px 6px rgba(0,0,0,0.05);
 	}
 	
 	.count {
