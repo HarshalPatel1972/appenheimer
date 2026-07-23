@@ -18,6 +18,10 @@
 	let inputQuery = $state('');
 	
 	// Sync URL -> State
+	// Only overwrites inputQuery when this is a real navigation event (back/forward,
+	// direct URL load, filter click) — NOT during live typing. We detect this by
+	// checking if the URL's q differs from BOTH searchStore.query (the live-typed value)
+	// and inputQuery. If they differ it means an external navigation happened.
 	$effect(() => {
 		const q = $page.url.searchParams.get('q') || '';
 		const appId = $page.url.searchParams.get('app');
@@ -30,11 +34,16 @@
 		const categories = category ? category.split(',') : [];
 
 		let changed = false;
-		if (q !== searchStore.query) {
+
+		// Only treat as "changed" if the URL diverges from both the live typed value
+		// AND the committed store value — i.e. this is external navigation, not typing.
+		const isExternalNav = q !== searchStore.query && q !== inputQuery;
+		if (isExternalNav || (q !== searchStore.query && q === '')) {
 			inputQuery = q;
 			searchStore.query = q;
 			changed = true;
 		}
+
 		if (JSON.stringify(searchStore.filters.platforms) !== JSON.stringify(platforms)) {
 			searchStore.filters.platforms = platforms;
 			changed = true;
