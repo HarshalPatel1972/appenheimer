@@ -46,11 +46,10 @@
 		top: 0;
 		left: 0;
 		background: var(--bg-surface);
-		border: 1px solid var(--border-subtle);
-		border-radius: 12px;
-		padding: 20px;
+		border: 2px solid var(--border-subtle);
+		padding: 16px;
 		box-sizing: border-box;
-		box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+		box-shadow: 4px 4px 0 rgba(0,0,0,1);
 		z-index: 1000;
 		pointer-events: auto;
 		transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
@@ -58,8 +57,8 @@
 	}
 	
 	@keyframes fadeIn {
-		from { opacity: 0; filter: blur(4px); }
-		to { opacity: 1; filter: blur(0px); }
+		from { opacity: 0; transform: scale(0.96); }
+		to { opacity: 1; transform: scale(1); }
 	}
 	
 	.panel-header {
@@ -71,45 +70,49 @@
 	
 	.panel-header h3 {
 		margin: 0;
-		font-size: 1.15rem;
-		font-weight: 600;
+		font-size: 1rem;
+		font-weight: 700;
+		text-transform: uppercase;
 		color: var(--text-main);
 	}
 	
 	.desc {
-		font-size: 0.95rem;
+		font-size: 0.85rem;
 		color: var(--text-muted);
-		margin: 0 0 16px 0;
-		line-height: 1.5;
+		margin: 0 0 12px 0;
+		line-height: 1.4;
+		font-family: var(--font-mono);
 	}
 	
 	.tags {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 8px;
+		gap: 6px;
 	}
 	
 	.tag {
-		background: var(--bg-primary);
-		color: var(--text-muted);
-		font-size: 0.75rem;
-		padding: 4px 8px;
-		border-radius: 6px;
-		text-transform: capitalize;
+		background: var(--bg-canvas);
+		color: var(--text-main);
+		font-size: 0.7rem;
+		font-weight: 600;
+		font-family: var(--font-mono);
+		padding: 3px 6px;
+		text-transform: uppercase;
 		border: 1px solid var(--border-subtle);
 	}
 	
 	.status-badge {
-		font-size: 0.75rem;
-		padding: 3px 8px;
-		border-radius: 99px;
-		font-weight: 600;
+		font-size: 0.7rem;
+		padding: 2px 6px;
+		font-weight: 700;
+		font-family: var(--font-mono);
 		text-transform: uppercase;
 		letter-spacing: 0.5px;
+		border: 1px solid var(--border-subtle);
 	}
 	
-	.status-badge[data-status="Operational"] { background: rgba(16, 185, 129, 0.15); color: #34d399; }
-	.status-badge[data-status="Degraded"] { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
-	.status-badge[data-status="Outage"] { background: rgba(239, 68, 68, 0.15); color: #f87171; }
-	.status-badge[data-status="Maintenance"] { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+	.status-badge[data-status="Operational"] { background: #10b981; color: #fff; }
+	.status-badge[data-status="Degraded"] { background: #f59e0b; color: #fff; }
+	.status-badge[data-status="Outage"] { background: #ef4444; color: #fff; }
+	.status-badge[data-status="Maintenance"] { background: #3b82f6; color: #fff; }
 </style>
