@@ -6,6 +6,7 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { elasticOut } from 'svelte/easing';
+	import { getIconUrl } from '$lib/utils/icons';
 	import AppDetailsView from './AppDetailsView.svelte';
 	
 	let { result, centerX, centerY }: { result: PlacedResult, centerX: number, centerY: number } = $props();
@@ -115,7 +116,7 @@
 		<div class="card-content">
 			<div class="icon-container">
 				{#if !iconError}
-					<img src={result.app.icon?.startsWith('http') ? result.app.icon : `https://logo.clearbit.com/${result.app.icon || result.app.name.toLowerCase().replace(/[^a-z0-9]/g, '')}.com`} alt={result.app.name} class="icon-img" onerror={() => iconError = true} />
+					<img src={getIconUrl(result.app.icon, result.app.name)} alt={result.app.name} class="icon-img" onerror={() => iconError = true} />
 				{:else}
 					<div class="icon-fallback">{result.app.name.charAt(0)}</div>
 				{/if}

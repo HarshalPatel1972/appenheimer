@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { AppResult, AppDetails } from '$lib/types/search';
+	import { getIconUrl } from '$lib/utils/icons';
 	
 	let { app, details }: { app: AppResult, details: AppDetails | null } = $props();
 	let iconError = $state(false);
@@ -9,7 +10,7 @@
 	<div class="center-piece">
 		<div class="logo-container">
 			{#if !iconError}
-				<img src={app.icon?.startsWith('http') ? app.icon : `https://logo.clearbit.com/${app.icon || app.name.toLowerCase().replace(/[^a-z0-9]/g, '')}.com`} alt={app.name} class="logo-img" onerror={() => iconError = true} />
+				<img src={getIconUrl(app.icon, app.name)} alt={app.name} class="logo-img" onerror={() => iconError = true} />
 			{:else}
 				<div class="logo-fallback">{app.name.charAt(0)}</div>
 			{/if}
