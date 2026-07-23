@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
+	"os"
 	"time"
 
 	v1 "github.com/appenheimer/backend/internal/api/v1"
@@ -24,8 +25,9 @@ func New(cfg *config.Config, logger *slog.Logger, db *postgres.DB) *Server {
 	v1.RegisterRoutes(mux, db)
 
 	// Apply Middleware in strict order:
-	// Recovery -> Request ID -> Logging -> Compression -> Routes
+	// CORS -> Recovery -> Request ID -> Logging -> Compression -> Routes
 	handler := Chain(mux,
+		CORS(os.Getenv("CORS_ORIGINS")), // Allow frontend to call the API
 		Recovery(logger),
 		RequestID(),
 		Logging(logger),
