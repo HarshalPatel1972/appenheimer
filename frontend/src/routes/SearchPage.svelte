@@ -19,6 +19,10 @@
 	let inputFocused = $state(false);
 	let showSuggestions = $state(false);
 	let inputEl: HTMLInputElement;
+	// Tracks the last q value the URL effect synced FROM the URL.
+	// We only update inputQuery from the URL when THIS changes — not when
+	// searchStore.query changes due to live typing (which was the typing bug).
+	let lastUrlQ = $state('');
 
 	// ── Animated rotating placeholder ────────────────────────────────────────
 	const placeholders = [
@@ -91,8 +95,12 @@
 
 		let changed = false;
 
-		const isExternalNav = q !== searchStore.query && q !== inputQuery;
-		if (isExternalNav || (q !== searchStore.query && q === '')) {
+		// Only sync inputQuery ← URL when the URL's q actually changed
+		// (back/forward navigation, direct link, filter click, commit).
+		// This fixes the typing bug: liveSearch() updates searchStore.query but
+		// NOT the URL, so q !== searchStore.query was triggering a false reset.
+		if (q !== lastUrlQ) {
+			lastUrlQ = q;
 			inputQuery = q;
 			searchStore.query = q;
 			showSuggestions = false;
@@ -186,9 +194,7 @@
 
 	function commitSearch() {
 		showSuggestions = false;
-		// Always flush the debounce and execute immediately
 		executeSearch();
-		// Build URL: update q, always remove app param to dismiss active app
 		const url = new URL($page.url);
 		if (searchStore.query) {
 			url.searchParams.set('q', searchStore.query);
@@ -196,6 +202,8 @@
 			url.searchParams.delete('q');
 		}
 		url.searchParams.delete('app');
+		// Pre-set lastUrlQ so the URL effect doesn't re-execute search
+		lastUrlQ = searchStore.query;
 		goto(url, { keepFocus: false, noScroll: true, replaceState: true });
 	}
 
@@ -207,6 +215,7 @@
 		const url = new URL($page.url);
 		url.searchParams.set('q', name);
 		url.searchParams.delete('app');
+		lastUrlQ = name;
 		goto(url, { keepFocus: false, noScroll: true, replaceState: true });
 	}
 
@@ -229,6 +238,7 @@
 		const url = new URL($page.url);
 		url.searchParams.set('q', keyword);
 		url.searchParams.delete('app');
+		lastUrlQ = keyword;
 		goto(url, { keepFocus: false, noScroll: true, replaceState: true });
 	}
 
@@ -263,6 +273,17 @@
 </script>
 
 <svelte:window onkeydown={handleGlobalKeydown} />
+
+<!-- ── NAVBAR ────────────────────────────────────────────────────── -->
+<nav class="navbar">
+	<span class="brand">APPENHEIMER</span>
+	<a
+		href="https://github.com/HarshalPatel1972/appenheimer"
+		target="_blank"
+		rel="noopener noreferrer"
+		class="github-btn"
+	>GitHub ↗</a>
+</nav>
 
 <main class="app-main">
 
@@ -328,7 +349,7 @@
 	<!-- ── CANVAS LAYER ──────────────────────────────────────────────── -->
 	<div class="content">
 		{#if searchStore.status === 'idle'}
-			<EmptyState onChipClick={handleChipClick} />
+			<!-- Idle: just empty canvas — hero copy in center-stage covers this -->
 		{:else if searchStore.status === 'error'}
 			<ErrorState message={searchStore.error} />
 		{:else if searchStore.status === 'loading' && searchStore.results.length === 0}
@@ -351,11 +372,59 @@
 </main>
 
 <style>
+	/* ── Navbar ─────────────────────────────────────────────────────── */
+	.navbar {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: 48px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 0 28px;
+		z-index: 500;
+		background: var(--bg-primary);
+		border-bottom: 1.5px solid rgba(17,17,17,0.15);
+		box-sizing: border-box;
+	}
+
+	.brand {
+		font-family: var(--font-mono);
+		font-weight: 800;
+		font-size: 0.78rem;
+		letter-spacing: 0.12em;
+		color: var(--text-main);
+		text-decoration: none;
+		text-transform: uppercase;
+	}
+
+	.github-btn {
+		font-family: var(--font-mono);
+		font-size: 0.72rem;
+		font-weight: 700;
+		color: var(--text-muted);
+		text-decoration: none;
+		letter-spacing: 0.05em;
+		text-transform: uppercase;
+		border: 1.5px solid rgba(17,17,17,0.3);
+		padding: 5px 11px;
+		transition: all 0.18s;
+	}
+
+	.github-btn:hover {
+		background: var(--text-main);
+		color: var(--bg-surface);
+		border-color: var(--text-main);
+	}
+
 	.app-main {
 		display: flex;
 		flex-direction: column;
 		height: 100vh;
 		width: 100vw;
+		padding-top: 48px; /* clear the navbar */
+		box-sizing: border-box;
 		background: var(--bg-canvas);
 		overflow: hidden;
 		position: relative;
@@ -376,20 +445,18 @@
 		padding: 0 16px;
 		box-sizing: border-box;
 		gap: 0;
-		/* Small upward nudge so search sits just above absolute centre */
-		margin-top: -20px;
 	}
 
 	/* ── Hero copy ──────────────────────────────────────────────────── */
 	.hero-copy {
 		text-align: center;
-		margin-bottom: 28px;
+		margin-bottom: 20px;
 		width: 100%;
 	}
 
 	.hero-copy h1 {
-		margin: 0 0 6px 0;
-		font-size: clamp(2rem, 5vw, 3rem);
+		margin: 0 0 8px 0;
+		font-size: clamp(2.2rem, 5vw, 3.2rem);
 		font-weight: 800;
 		letter-spacing: -0.03em;
 		color: var(--text-main);
@@ -398,10 +465,11 @@
 
 	.hero-sub {
 		margin: 0;
-		font-size: clamp(0.85rem, 2vw, 1rem);
+		font-size: 0.88rem;
 		color: var(--text-muted);
 		font-family: var(--font-mono);
 		font-weight: 500;
+		letter-spacing: 0.01em;
 	}
 
 	/* ── Search bar wrapper ─────────────────────────────────────────── */

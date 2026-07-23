@@ -121,7 +121,7 @@
 	}
 
 	.top-left {
-		top: 24px;
+		top: 72px;
 		left: 24px;
 		max-width: 360px;
 		animation-delay: 0.05s;
@@ -129,7 +129,7 @@
 	}
 
 	.top-right {
-		top: 24px;
+		top: 72px;
 		right: 24px;
 		max-width: 300px;
 		animation-delay: 0.15s;

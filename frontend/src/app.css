@@ -1,17 +1,17 @@
-/* Global Reset and Brutalist/Editorial Foundation */
+/* Global Reset and Editorial Foundation */
 :root {
-  /* Semantic Colors (Editorial Brutalist Mode) */
-  --bg-primary: #eef2f6; /* Pale slate instead of beige */
-  --bg-surface: #ffffff;
-  --bg-canvas: #eef2f6;
-  --text-main: #111111;
-  --text-muted: #555555;
-  --border-subtle: #111111; /* Harsh black borders */
-  --color-primary: #d9381e; /* Deep crimson accent instead of orange */
-  --color-error: #ef4444;
+  /* Warm parchment palette — not cold blue-gray */
+  --bg-primary:  #F4F1EB;
+  --bg-surface:  #FDFCFA;
+  --bg-canvas:   #F4F1EB;
+  --text-main:   #111111;
+  --text-muted:  #666660;
+  --border-subtle: #111111;
+  --color-primary: #C0392B; /* rich crimson */
+  --color-error:   #C0392B;
 
   /* Typography */
-  --font-sans: 'Space Grotesk', 'Oswald', system-ui, sans-serif;
+  --font-sans: 'Space Grotesk', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', 'Courier New', Courier, monospace;
 }
 
@@ -19,11 +19,10 @@ body {
   margin: 0;
   padding: 0;
   background-color: var(--bg-primary);
-  /* Brutalist blueprint grid */
-  background-image: 
-    linear-gradient(rgba(17, 17, 17, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(17, 17, 17, 0.05) 1px, transparent 1px);
-  background-size: 40px 40px;
+  /* Very subtle warm dot-grid texture */
+  background-image:
+    radial-gradient(circle, rgba(17,17,17,0.06) 1px, transparent 1px);
+  background-size: 28px 28px;
   color: var(--text-main);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
