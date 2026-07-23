@@ -59,8 +59,8 @@
 			const dy = myCenterY - hoveredCenterY;
 			const distance = Math.sqrt(dx * dx + dy * dy);
 			
-			if (distance < 350 && distance > 0) {
-				const force = (350 - distance) / 350;
+			if (distance < 120 && distance > 0) {
+				const force = (120 - distance) / 120;
 				repulsionX = (dx / distance) * force * 12;
 				repulsionY = (dy / distance) * force * 12;
 			} else {
