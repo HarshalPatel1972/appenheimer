@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feature Index</title>
+    <style>
+        :root {
+            --bg-grad: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --card-bg: rgba(255, 255, 255, 0.7);
+            --card-border: rgba(255, 255, 255, 0.4);
+            --text-main: #2d3748;
+            --text-sub: #4a5568;
+            --accent: #3182ce;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-grad: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+                --card-bg: rgba(26, 32, 44, 0.7);
+                --card-border: rgba(255, 255, 255, 0.1);
+                --text-main: #f7fafc;
+                --text-sub: #e2e8f0;
+                --accent: #63b3ed;
+            }
+        }
+
+        body { 
+            font-family: 'Inter', system-ui, -apple-system, sans-serif; 
+            min-height: 100vh;
+            margin: 0;
+            padding: 4rem 2rem; 
+            background: var(--bg-grad); 
+            color: var(--text-main); 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -0.05em;
+            margin-bottom: 3rem;
+            text-align: center;
+            background: -webkit-linear-gradient(45deg, var(--accent), #9f7aea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .feature { 
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            margin-bottom: 2rem; 
+            padding: 2rem; 
+            border: 1px solid var(--card-border); 
+            border-radius: 16px; 
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .feature:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
+        }
+
+        h3 { 
+            margin-top: 0; 
+            margin-bottom: 1rem;
+            color: var(--accent); 
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        p {
+            color: var(--text-sub);
+            line-height: 1.6;
+            margin: 0;
+            font-size: 1.05rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>Appenheimer Feature Index</h1>
+    <div class="container">
+        <h2>✅ Confirmed Features</h2>
+        
+        <div class="feature">
+            <h3>Feature #1: Intent Search (non-AI)</h3>
+            <p>A deterministic, fast, free, and reliable search engine using synonym dictionaries, aliases, stemming, fuzzy search, and per-app tags/keywords instead of LLMs.</p>
+        </div>
+        <div class="feature">
+            <h3>Feature #2: Capability Tags</h3>
+            <p>Categorical tags assigned to apps to ensure deterministic sorting, filtering, and discovery without relying on natural language processing.</p>
+        </div>
+        <div class="feature">
+            <h3>Feature #3: Hover Preview</h3>
+            <p>A fast, at-a-glance tooltip showing 3–5 core capabilities when hovering an app card, while smoothly blurring the rest of the canvas to maintain focus.</p>
+        </div>
+        <div class="feature">
+            <h3>Feature #4: App Details Panel</h3>
+            <p>A fact-sheet modal or side panel displaying platforms, pricing, key features, and screenshots, allowing users to close it and seamlessly return to their un-lost spatial graph.</p>
+        </div>
+        <div class="feature">
+            <h3>Feature #5: Live Context-Aware Filters</h3>
+            <p><strong>"Discover first. Filter later."</strong> Filters only appear <em>after</em> a search is executed to prevent users from prematurely hiding premium apps. Filters are dynamically generated based on the search context (e.g., "Templates" for design, "4K" for video) and instantly sort/hide results without a page reload.</p>
+        </div>
+        <div class="feature">
+            <h3>Feature #6: Curated Collections (Stacks)</h3>
+            <p>Expert-curated stacks of apps (e.g., "Best for Students", "Designer Starter Pack") to help beginners discover tools. A few top collections are surfaced on the homepage, with a "View All" page hosting the full library.</p>
+        </div>
+
+        <div class="feature">
+            <h3>Feature #7: Saved Apps</h3>
+            <p>Users can explicitly bookmark apps they like ("Saved Apps" or "Your Collection") using local storage, without requiring an account.</p>
+        </div>
+        <div class="feature">
+            <h3>Feature #8: Search-Specific "Last Used" Tag</h3>
+            <p>A subtle memory cue badge ("Last Used") shown on the app card if the user previously launched it from that specific search query (e.g. Canva for "Design"). No dedicated "Recent" section, just context-aware tags.</p>
+        </div>
+        <div class="feature">
+            <h3>Feature #9: Direct Routing via Link Icon</h3>
+            <p>Clicking an app card opens the App Details panel. A specific external link icon on the card routes the user directly to the official website (no intermediate "App Journey" page).</p>
+        </div>
+        <div class="feature">
+            <h3>Feature #10: Curated Meaningful Badges</h3>
+            <p>Rare, specific badges (e.g., "Editor's Choice", "Beginner Friendly", "Industry Standard") applied sparingly to help users avoid sketchy tools and quickly identify the best options.</p>
+        </div>
+        <div class="feature">
+            <h3>Feature #12: Hidden Gems</h3>
+            <p>A toggle that surfaces lesser‑known but excellent apps (e.g., Kittl, Photopea, Affine) to help users discover tools they wouldn't otherwise find.</p>
+        </div>
+        <div class="feature">
+            <h3>Feature #13: Keyboard Navigation</h3>
+            <p>Full keyboard support: arrow keys to move between apps, Enter to open, Esc to return to search, enabling a fast, desktop‑like experience.</p>
+        </div>
+        <div class="feature">
+            <h3>Feature #18: Keyboard Shortcut Cheat Sheet</h3>
+            <p>Press <code>?</code> to show an overlay with shortcuts (e.g., <code>/</code> focus search, <code>Esc</code> back, arrows navigate, <code>Enter</code> open). Hidden UI element that powers up power users.</p>
+        </div>
+        <div class="feature">
+            <h3>Feature #22: Search Anywhere (Universal Search)</h3>
+            <p>One search bar, zero modes. Users can type app names, tasks, categories, features, platforms, or combos (e.g., "free markdown notes for students"). The deterministic engine resolves context without dropdowns.</p>
+        </div>
+        <div class="feature">
+            <h3>Feature #23: Zero Results (Friendly Fallback)</h3>
+            <p>If no exact match is found, show a friendly message with closest matches instead of a dead‑end “No results”. Keeps the experience alive.</p>
+        </div>
+        <div class="feature">
+            <h3>Feature #24: Instant Search (Animated Intent Preview)</h3>
+            <p>While typing, floating keyword bubbles animate across the canvas, refining as the user types. Users can click a suggestion to instantly show its apps, or press Enter to search the exact query. This creates anticipation and confirms intent.</p>
+        </div>
+        <div class="feature">
+            <h3>Feature #25: Search Chips</h3>
+            <p>After results appear, the original query becomes removable chips (e.g., Free · Windows · Video Editor). Removing a chip instantly updates results.</p>
+        </div>
+        <div class="feature">
+            <h3>Feature #26: "What's New" Badges on App Cards</h3>
+            <p>When an app receives a major update, a tiny badge (✨ AI Removed Background, 🆕 Offline Mode, 🚀 New Mobile App) appears, earned only after the user has visited that app.</p>
+        </div>
+        <div class="feature">
+            <h3>Feature #28: Favorites in Results</h3>
+            <p>Saved apps float to the top of future searches with a ⭐ indicator, providing quick access.</p>
+        </div>
+        <div class="feature">
+            <h3>Feature #29: Search Sessions</h3>
+            <p>The site remembers the last search state; a subtle pill offers "Continue" or "New" to resume or start fresh.</p>
+        </div>
+        <div class="feature">
+            <h3>Feature #33: Feedback Button</h3>
+            <p>A tiny ⚑ icon on each app card lets users report broken links, wrong information, or suggest new apps with a single click, keeping the directory up‑to‑date.</p>
+        </div>
+        <div class="feature">
+            <h3>Feature #34: Changelog</h3>
+            <p>A simple page lists recent site updates (new apps, improved search, bug fixes) to show users the project is actively maintained.</p>
+        </div>
+        <div class="feature">
+            <h3>Feature #35: App Status Badges</h3>
+            <p>Each app card shows a small status badge (✅ Active, ⚠️ Discontinued, 🔄 Acquired, 🧪 Beta) so users avoid dead or transitional software.</p>
+        </div>
+        <div class="feature">
+            <h3>Feature #36: Trust Signals (Phase 2)</h3>
+            <p>Future feature: Shows factual indicators like "50M+ users", "Since 2012", "Company-backed" to help users judge credibility in 2 seconds.</p>
+        </div>
+        <div class="feature">
+            <h3>Feature #37: Developer Claimed Page</h3>
+            <p>Phase 1: Developers can claim their page and suggest updates to description, pricing, etc., which go into a review queue. Phase 2: Verified developers can update instantly.</p>
+        </div>
+        <div class="feature">
+            <h3>Feature #38: Request a Search</h3>
+            <p>If a search has no results, users can click "Request this search" to help prioritize what to add based on real demand.</p>
+        </div>
+        <div class="feature">
+            <h3>Feature #40: Community Corrections</h3>
+            <p>Users can suggest edits to incorrect information (like Wikipedia) which go into a moderation queue, separate from just reporting a bug.</p>
+        </div>
+        <div class="feature">
+            <h3>Feature #42: Service Status (Future)</h3>
+            <p>If an app is down (and status data is available via API), it renders greyed out. Hovering displays "This service is currently experiencing an outage." Avoids active pinging to maintain leanness.</p>
+        </div>
+        <div class="feature">
+            <h3>Feature #44: Anonymous Session Analytics</h3>
+            <p>Developer-only admin feature tracking anonymous session flow (search queries, latency, hovers, clicks, time spent) as a timeline to help prioritize improvements and debug issues without collecting personal data.</p>
+        </div>
+        <div class="feature">
+            <h3>Feature #52: Smart Redirect</h3>
+            <p>Clicking the link icon on an app card opens the official website immediately in a new tab, while a subtle, temporary toast on the current site confirms "✨ You're now exploring [App]."</p>
+        </div>
+        <div class="feature">
+            <h3>Feature #53: App Popularity Over Time</h3>
+            <p>Shows dynamic trends based on internal ecosystem data (e.g., 🔥 Trending This Week, 📈 Growing Fast, 👑 Most Clicked) instead of static external rankings.</p>
+        </div>
+
+
+        
+        <h2>⏸ Parked Features</h2>
+
+        <div class="feature" style="opacity: 0.6; border-style: dashed;">
+            <h3>Feature #11: Official Website Indicator</h3>
+            <p>Shows a tiny badge (✅ Official) on apps that exist on multiple sites, indicating the link leads to the real website.</p>
+        </div>
+        <div class="feature" style="opacity: 0.6; border-style: dashed;">
+            <h3>Feature #17: Search History</h3>
+            <p>A tiny clock icon in the search bar opens a list of the last 5–10 searches, allowing one‑click re‑run. Parked.</p>
+        </div>
+        <div class="feature" style="opacity: 0.6; border-style: dashed;">
+            <h3>Feature #12: "Why People Use It" Hover Details</h3>
+            <p>On hover, displays real use cases (e.g., for Canva: Instagram posts, presentations, resumes, thumbnails, posters) instead of generic marketing features.</p>
+        </div>
+        <div class="feature" style="opacity: 0.6; border-style: dashed;">
+            <h3>Feature #41: App Timeline</h3>
+            <p>On click, shows major milestones (launch, mobile app, AI features) to indicate app maturity. Parked for v1.</p>
+        </div>
+        <div class="feature" style="opacity: 0.6; border-style: dashed;">
+            <h3>Feature #43: App Collections by Users</h3>
+            <p>Users can create and share collections of apps (e.g., "My College Toolkit"). Parked as a potential future community feature.</p>
+        </div>
+        <div class="feature" style="opacity: 0.6; border-style: dashed;">
+            <h3>Feature #45: Search Insights</h3>
+            <p>After a search, show one tiny context-aware statistic (e.g., "Showing 127 apps", "42 apps are free") to make the experience richer. Parked.</p>
+        </div>
+        <div class="feature" style="opacity: 0.6; border-style: dashed;">
+            <h3>Feature #48: App Availability History</h3>
+            <p>Show reliability over time (e.g., 99.98% uptime). Parked for V2.</p>
+        </div>
+        <div class="feature" style="opacity: 0.6; border-style: dashed;">
+            <h3>Feature #50: Compare Search Results Across Time</h3>
+            <p>Highlight what changed since the user last searched for a query (new apps, discontinued apps). Parked for the future.</p>
+        </div>
+        <div class="feature" style="opacity: 0.6; border-style: dashed;">
+            <h3>Feature #51: App Playground</h3>
+            <p>Show an interactive screenshot/mockup of the app interface on hover or click so users know what it looks like before visiting. Parked for v2.</p>
+        </div>
+
+
+        <h2>❌ Killed Features</h2>
+
+        <div class="feature" style="opacity: 0.4; border-style: dotted; border-color: #f56565;">
+            <h3 style="color: #f56565;">Feature: "Recently Added" Badge</h3>
+            <p>Badge indicating newly added apps was deemed too deep; not included to keep interactions under a minute.</p>
+        </div>
+        <div class="feature" style="opacity: 0.4; border-style: dotted; border-color: #f56565;">
+            <h3 style="color: #f56565;">Feature #39: App Relationships</h3>
+            <p>Killed because showing "Works well with", "Imports from", etc. is content that should be displayed in the app details view, not a new feature.</p>
+        </div>
+        <div class="feature" style="opacity: 0.4; border-style: dotted; border-color: #f56565;">
+            <h3 style="color: #f56565;">Feature #46: Smart Empty State</h3>
+            <p>Killed because the beautiful landing page design will handle the initial 2-5 seconds of the website visit organically. Not a programmatic feature.</p>
+        </div>
+        <div class="feature" style="opacity: 0.4; border-style: dotted; border-color: #f56565;">
+            <h3 style="color: #f56565;">Feature #47: Keyboard Command Palette (Ctrl+K)</h3>
+            <p>Killed because it is a duplicate of the already confirmed keyboard shortcuts cheat sheet and universal search capabilities.</p>
+        </div>
+        <div class="feature" style="opacity: 0.4; border-style: dotted; border-color: #f56565;">
+            <h3 style="color: #f56565;">Feature #54: Search Completion Rate</h3>
+            <p>Killed as a standalone feature. This is naturally covered by the Anonymous Session Analytics (Feature #44) tracking flow and success states.</p>
+        </div>
+
+
+
+        <h2>⏳ Pending Decision</h2>
+        <div class="feature" style="opacity: 0.5; border-style: dashed;">
+            <h3>Feature: Copy Link to Search</h3>
+            <p>After searching, the URL reflects the query (e.g., /search/design-app) for sharing/bookmarking. Decision pending.</p>
+        </div>
+    </div>
+    
+    <div class="category">
+        <h2>⚙️ Search Engine Requirements</h2>
+        <div class="feature">
+            <h3>Alias Resolution & Duplicate Detection (Formerly Feature #49)</h3>
+            <p>Not a UI feature. The search engine backend must handle canonical app IDs, aliases (e.g., "vscode" → "Visual Studio Code"), synonyms, and fuzzy matching to prevent duplicates in results.</p>
+        </div>
+    </div>
+
+</body>
+</html>

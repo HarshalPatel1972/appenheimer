@@ -4,59 +4,68 @@
 	let { app, details }: { app: AppResult, details: AppDetails | null } = $props();
 </script>
 
-<div class="app-details-view">
-	<div class="header">
+<div class="app-details-radial">
+	<div class="center-piece">
 		<div class="logo">
 			<!-- Large Logo Placeholder -->
 		</div>
+		<h2>{app.name}</h2>
+		<p class="developer">{details?.developer || 'Unknown Developer'}</p>
+		<p class="description">{details?.longDescription || app.description}</p>
 	</div>
 	
-	<div class="grid-layout">
-		<!-- Top Left: Platforms -->
-		<div class="section platforms">
-			<h4>Platforms</h4>
-			{#if details?.platforms}
-				<div class="pill-list">
-					{#each details.platforms as p}
-						<span class="pill">{p}</span>
-					{/each}
-				</div>
-			{:else}
-				<p class="placeholder">Loading...</p>
-			{/if}
-		</div>
+	<!-- Top Left: Platforms -->
+	<div class="quadrant top-left">
+		<h4>Platforms</h4>
+		{#if details?.platforms}
+			<div class="pill-list">
+				{#each details.platforms as p}
+					<span class="pill">{p}</span>
+				{/each}
+			</div>
+		{:else}
+			<p class="placeholder">Loading...</p>
+		{/if}
+	</div>
 
-		<!-- Top Right: Pricing -->
-		<div class="section pricing">
-			<h4>Pricing</h4>
-			{#if details?.pricing}
-				<div class="pill-list">
-					{#each details.pricing as p}
-						<span class="pill price">{p}</span>
-					{/each}
-				</div>
-			{:else}
-				<p class="placeholder">Loading...</p>
-			{/if}
-		</div>
+	<!-- Top Right: Pricing -->
+	<div class="quadrant top-right">
+		<h4>Pricing</h4>
+		{#if details?.pricing}
+			<div class="pill-list">
+				{#each details.pricing as p}
+					<span class="pill price">{p}</span>
+				{/each}
+			</div>
+		{:else}
+			<p class="placeholder">Loading...</p>
+		{/if}
+	</div>
 
-		<!-- Bottom Left: Categories -->
-		<div class="section categories">
-			<h4>Categories</h4>
+	<!-- Bottom Left: Categories & Tags -->
+	<div class="quadrant bottom-left">
+		<h4>Categories & Tags</h4>
+		<div class="pill-list">
 			{#if details?.categories}
-				<div class="pill-list">
-					{#each details.categories as c}
-						<span class="pill">{c}</span>
-					{/each}
-				</div>
-			{:else}
+				{#each details.categories as c}
+					<span class="pill">{c}</span>
+				{/each}
+			{/if}
+			{#if details?.tags}
+				{#each details.tags as t}
+					<span class="pill outline">{t}</span>
+				{/each}
+			{/if}
+			{#if !details?.categories && !details?.tags}
 				<p class="placeholder">Loading...</p>
 			{/if}
 		</div>
+	</div>
 
-		<!-- Bottom Right: Website Links -->
-		<div class="section links">
-			<h4>Links</h4>
+	<!-- Bottom Right: Links & Status -->
+	<div class="quadrant bottom-right">
+		<h4>Links & Status</h4>
+		<div class="links-container">
 			{#if details?.websiteUrl}
 				<a href={details.websiteUrl} target="_blank" rel="noopener noreferrer" class="link-btn">
 					Visit Website ↗
@@ -64,45 +73,28 @@
 			{:else}
 				<p class="placeholder">Loading...</p>
 			{/if}
-		</div>
-	</div>
-
-	<!-- Bottom Center: Tags & Details -->
-	<div class="footer-sections">
-		<div class="section description">
-			<p>{details?.longDescription || app.description}</p>
-		</div>
-
-		<div class="section extra">
-			<div class="col">
-				<h4>Updates</h4>
-				<p class="small-text">{details?.lastUpdate ? new Date(details.lastUpdate).toLocaleDateString() : 'Unknown'}</p>
+			<div class="status-info">
+				<span class="small-label">Last Updated:</span>
+				<span class="small-text">{details?.lastUpdate ? new Date(details.lastUpdate).toLocaleDateString() : 'Unknown'}</span>
 			</div>
-			<div class="col">
-				<h4>Developer</h4>
-				<p class="small-text">{details?.developer || 'Unknown'}</p>
-			</div>
-			<div class="col">
-				<h4>Tags</h4>
-				<div class="pill-list small">
-					{#each details?.tags || [] as t}
-						<span class="pill outline">{t}</span>
-					{/each}
-				</div>
+			<div class="status-info">
+				<span class="small-label">Status:</span>
+				<span class="small-text status-{app.status?.toLowerCase() || 'operational'}">{app.status || 'Operational'}</span>
 			</div>
 		</div>
 	</div>
 </div>
 
 <style>
-	.app-details-view {
+	.app-details-radial {
 		width: 100%;
 		height: 100%;
-		display: flex;
-		flex-direction: column;
-		padding: 40px;
+		display: grid;
+		grid-template-columns: 1fr auto 1fr;
+		grid-template-rows: 1fr auto 1fr;
+		gap: 24px;
+		padding: 32px;
 		box-sizing: border-box;
-		overflow-y: auto;
 		color: var(--text-main);
 		animation: fadeIn 0.4s ease forwards 0.2s;
 		opacity: 0;
@@ -112,32 +104,84 @@
 		to { opacity: 1; }
 	}
 
-	.header {
+	.center-piece {
+		grid-column: 2;
+		grid-row: 1 / -1; /* Spans top to bottom in the center */
 		display: flex;
+		flex-direction: column;
+		align-items: center;
 		justify-content: center;
-		margin-bottom: 40px;
+		text-align: center;
+		max-width: 320px;
+		z-index: 2;
 	}
 
 	.logo {
-		width: 120px;
-		height: 120px;
+		width: 100px;
+		height: 100px;
 		background: var(--color-primary);
 		border-radius: 24px;
 		box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+		margin-bottom: 16px;
 	}
 
-	.grid-layout {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 32px;
-		margin-bottom: 40px;
+	.center-piece h2 {
+		margin: 0 0 4px 0;
+		font-size: 1.8rem;
+		font-weight: 700;
+		letter-spacing: -0.02em;
 	}
 
-	.section {
+	.developer {
+		margin: 0 0 16px 0;
+		font-size: 0.95rem;
+		color: var(--text-muted);
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+	}
+
+	.description {
+		font-size: 1.05rem;
+		line-height: 1.5;
+		color: rgba(255, 255, 255, 0.85); /* Slightly brighter for contrast */
+		margin: 0;
+	}
+
+	.quadrant {
 		background: rgba(0,0,0,0.2);
 		padding: 20px;
 		border-radius: 16px;
 		border: 1px solid var(--border-subtle);
+		width: 100%;
+		max-width: 260px;
+		display: flex;
+		flex-direction: column;
+		backdrop-filter: blur(8px);
+	}
+
+	.top-left {
+		grid-column: 1;
+		grid-row: 1;
+		align-self: flex-end;
+		justify-self: flex-end;
+	}
+	.top-right {
+		grid-column: 3;
+		grid-row: 1;
+		align-self: flex-end;
+		justify-self: flex-start;
+	}
+	.bottom-left {
+		grid-column: 1;
+		grid-row: 3;
+		align-self: flex-start;
+		justify-self: flex-end;
+	}
+	.bottom-right {
+		grid-column: 3;
+		grid-row: 3;
+		align-self: flex-start;
+		justify-self: flex-start;
 	}
 
 	h4 {
@@ -158,7 +202,7 @@
 		background: rgba(255,255,255,0.1);
 		padding: 6px 12px;
 		border-radius: 99px;
-		font-size: 0.9rem;
+		font-size: 0.85rem;
 	}
 
 	.pill.price {
@@ -170,7 +214,7 @@
 	.pill.outline {
 		background: transparent;
 		border: 1px solid rgba(255,255,255,0.2);
-		font-size: 0.8rem;
+		font-size: 0.75rem;
 		padding: 4px 10px;
 	}
 
@@ -180,15 +224,22 @@
 		margin: 0;
 		font-size: 0.9rem;
 	}
+	
+	.links-container {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+	}
 
 	.link-btn {
 		display: inline-block;
 		background: var(--text-main);
 		color: var(--bg-surface);
-		padding: 10px 20px;
+		padding: 10px 16px;
 		border-radius: 8px;
 		text-decoration: none;
 		font-weight: 600;
+		text-align: center;
 		transition: transform 0.2s;
 	}
 
@@ -196,29 +247,24 @@
 		transform: scale(1.05);
 	}
 
-	.footer-sections {
+	.status-info {
 		display: flex;
-		flex-direction: column;
-		gap: 24px;
+		justify-content: space-between;
+		align-items: center;
 	}
 
-	.description p {
-		font-size: 1.1rem;
-		line-height: 1.6;
-		margin: 0;
-	}
-
-	.extra {
-		display: flex;
-		gap: 40px;
-	}
-
-	.col {
-		flex: 1;
+	.small-label {
+		font-size: 0.8rem;
+		color: var(--text-muted);
 	}
 
 	.small-text {
-		margin: 0;
-		font-size: 0.9rem;
+		font-size: 0.85rem;
+		font-weight: 500;
 	}
+
+	.status-operational { color: #34d399; }
+	.status-degraded { color: #fbbf24; }
+	.status-outage { color: #f87171; }
+	.status-maintenance { color: #60a5fa; }
 </style>
