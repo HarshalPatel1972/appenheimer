@@ -25,9 +25,9 @@ export function calculateLayout(
 	const centerX = canvasWidth / 2 - cardWidth / 2;
 	const centerY = canvasHeight / 2 - cardHeight / 2;
 
-	// Dead zone in the center for the search bar (approx 650x200)
-	const exclusionWidth = 700;
-	const exclusionHeight = 200;
+	// Dead zone in the center for the search bar (approx 850x350)
+	const exclusionWidth = 850;
+	const exclusionHeight = 350;
 
 	interface GridPos { q: number; r: number; x: number; y: number; dist: number }
 	let grid: GridPos[] = [];

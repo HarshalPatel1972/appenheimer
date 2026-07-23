@@ -8,8 +8,8 @@
 <div class="app-details-radial">
 	<div class="center-piece">
 		<div class="logo-container">
-			{#if app.icon && !iconError}
-				<img src={app.icon} alt={app.name} class="logo-img" onerror={() => iconError = true} />
+			{#if !iconError}
+				<img src={app.icon || `https://logo.clearbit.com/${app.name.toLowerCase().replace(/[^a-z0-9]/g, '')}.com`} alt={app.name} class="logo-img" onerror={() => iconError = true} />
 			{:else}
 				<div class="logo-fallback">{app.name.charAt(0)}</div>
 			{/if}

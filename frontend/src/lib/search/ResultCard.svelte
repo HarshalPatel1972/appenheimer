@@ -114,8 +114,8 @@
 	{:else}
 		<div class="card-content">
 			<div class="icon-container">
-				{#if result.app.icon && !iconError}
-					<img src={result.app.icon} alt={result.app.name} class="icon-img" onerror={() => iconError = true} />
+				{#if !iconError}
+					<img src={result.app.icon || `https://logo.clearbit.com/${result.app.name.toLowerCase().replace(/[^a-z0-9]/g, '')}.com`} alt={result.app.name} class="icon-img" onerror={() => iconError = true} />
 				{:else}
 					<div class="icon-fallback">{result.app.name.charAt(0)}</div>
 				{/if}

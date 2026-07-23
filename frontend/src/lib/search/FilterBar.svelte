@@ -99,8 +99,15 @@
 	.filter-controls {
 		display: flex;
 		gap: 24px;
-		flex-wrap: wrap;
+		flex-wrap: nowrap;
 		justify-content: center;
+		max-width: 90vw;
+		overflow-x: auto;
+		scrollbar-width: none; /* Firefox */
+		-ms-overflow-style: none; /* IE/Edge */
+	}
+	.filter-controls::-webkit-scrollbar {
+		display: none; /* Chrome/Safari */
 	}
 	
 	.filter-group {
