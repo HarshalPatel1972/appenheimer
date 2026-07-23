@@ -29,7 +29,7 @@
 
 		let changed = false;
 		if (q !== searchStore.query) {
-			inputQuery = q;
+			inputQuery = '';
 			searchStore.query = q;
 			changed = true;
 		}

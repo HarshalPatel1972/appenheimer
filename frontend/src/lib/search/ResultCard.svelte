@@ -115,7 +115,7 @@
 		<div class="card-content">
 			<div class="icon-container">
 				{#if !iconError}
-					<img src={result.app.icon || `https://logo.clearbit.com/${result.app.name.toLowerCase().replace(/[^a-z0-9]/g, '')}.com`} alt={result.app.name} class="icon-img" onerror={() => iconError = true} />
+					<img src={result.app.icon?.startsWith('http') ? result.app.icon : `https://logo.clearbit.com/${result.app.icon || result.app.name.toLowerCase().replace(/[^a-z0-9]/g, '')}.com`} alt={result.app.name} class="icon-img" onerror={() => iconError = true} />
 				{:else}
 					<div class="icon-fallback">{result.app.name.charAt(0)}</div>
 				{/if}
