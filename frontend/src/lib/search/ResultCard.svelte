@@ -99,7 +99,7 @@
 	class:dimmed={isDimmed}
 	class:down={isDown}
 	style="transform: translate({targetX}px, {targetY}px) scale({isHovered ? 1.15 : 1}); opacity: {detailsStore.activeAppId ? 0 : 1}; pointer-events: {detailsStore.activeAppId ? 'none' : 'auto'};"
-	tabindex="0"
+	tabindex={detailsStore.activeAppId ? -1 : 0}
 	in:constellation={{ delay: Math.random() * 150 }}
 	onmouseenter={handleEnter}
 	onmouseleave={handleLeave}
