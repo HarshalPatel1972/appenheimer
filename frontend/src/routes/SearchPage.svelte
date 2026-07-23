@@ -4,13 +4,15 @@
 	import { searchStore } from '$lib/state/search.svelte';
 	import { detailsStore } from '$lib/state/details.svelte';
 	import { fetchAppDetails } from '$lib/services/apps';
-	import { executeSearch } from '$lib/services/search';
+	import { liveSearch, executeSearch } from '$lib/services/search';
 	import SearchCanvas from '$lib/search/SearchCanvas.svelte';
 	import EmptyState from '$lib/components/EmptyState.svelte';
 	import TypingState from '$lib/components/TypingState.svelte';
 	import LoadingState from '$lib/components/LoadingState.svelte';
 	import ErrorState from '$lib/components/ErrorState.svelte';
 	import FilterBar from '$lib/search/FilterBar.svelte';
+	import AppDetailsView from '$lib/search/AppDetailsView.svelte';
+	import { getIconUrl } from '$lib/utils/icons';
 	import { fade } from 'svelte/transition';
 
 	let inputQuery = $state('');
@@ -108,23 +110,14 @@
 	function handleInput(e: Event) {
 		const target = e.target as HTMLInputElement;
 		inputQuery = target.value;
-		if (inputQuery.trim().length > 0) {
-			searchStore.setTyping();
-		} else {
-			searchStore.status = 'idle';
-			searchStore.results = [];
-		}
+		// Live search: syncs query + debounces API call on every keystroke
+		liveSearch(inputQuery);
 	}
 
 	function commitSearch() {
-		searchStore.query = inputQuery.trim();
-		if (searchStore.query.length === 0 && searchStore.activeFiltersOrder.length === 0) {
-			searchStore.status = 'idle';
-			searchStore.results = [];
-		} else {
-			executeSearch();
-		}
-		
+		// Flush debounce immediately — search is already in searchStore.query
+		executeSearch();
+		// Update URL to reflect committed query
 		const url = new URL($page.url);
 		if (searchStore.query) {
 			url.searchParams.set('q', searchStore.query);
