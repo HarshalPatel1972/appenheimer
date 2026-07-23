@@ -24,7 +24,7 @@
 	{#if searchStore.status === 'success'}
 		<ul role="list" class="canvas-list">
 			{#each placedResults as result (result.app.id)}
-				<ResultCard {result} />
+				<ResultCard {result} centerX={containerWidth / 2} centerY={containerHeight / 2} />
 			{/each}
 		</ul>
 		<HoverPanel />

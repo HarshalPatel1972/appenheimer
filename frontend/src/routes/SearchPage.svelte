@@ -6,7 +6,6 @@
 	import { fetchAppDetails } from '$lib/services/apps';
 	import { executeSearch } from '$lib/services/search';
 	import SearchCanvas from '$lib/search/SearchCanvas.svelte';
-	import AppDrawer from '$lib/search/AppDrawer.svelte';
 	import EmptyState from '$lib/components/EmptyState.svelte';
 	import TypingState from '$lib/components/TypingState.svelte';
 	import LoadingState from '$lib/components/LoadingState.svelte';
@@ -89,16 +88,55 @@
 		}
 	});
 
+	let queryChips = $derived(searchStore.query.trim() ? searchStore.query.trim().split(/\s+/) : []);
+
 	function handleInput(e: Event) {
 		const target = e.target as HTMLInputElement;
 		inputQuery = target.value;
-		searchStore.query = inputQuery;
+		if (inputQuery.trim().length > 0) {
+			searchStore.setTyping();
+		} else if (queryChips.length === 0) {
+			searchStore.status = 'idle';
+		}
+	}
+
+	function commitSearch() {
+		if (inputQuery.trim()) {
+			const current = searchStore.query ? searchStore.query.trim() + ' ' : '';
+			searchStore.query = current + inputQuery.trim();
+			inputQuery = '';
+		}
+		
 		executeSearch();
 		
-		// Update URL without reloading or breaking history
 		const url = new URL($page.url);
-		if (inputQuery) {
-			url.searchParams.set('q', inputQuery);
+		if (searchStore.query) {
+			url.searchParams.set('q', searchStore.query);
+		} else {
+			url.searchParams.delete('q');
+		}
+		goto(url, { keepFocus: true, noScroll: true, replaceState: true });
+	}
+
+	function handleInputKeydown(e: KeyboardEvent) {
+		if (e.key === 'Enter') {
+			e.preventDefault();
+			commitSearch();
+		} else if (e.key === 'Backspace' && inputQuery === '' && queryChips.length > 0) {
+			removeChip(queryChips.length - 1);
+		}
+	}
+
+	function removeChip(index: number) {
+		const newChips = [...queryChips];
+		newChips.splice(index, 1);
+		searchStore.query = newChips.join(' ');
+		
+		executeSearch();
+		
+		const url = new URL($page.url);
+		if (searchStore.query) {
+			url.searchParams.set('q', searchStore.query);
 		} else {
 			url.searchParams.delete('q');
 		}
@@ -150,10 +188,23 @@
 		<input 
 			type="text" 
 			class="search-input" 
-			placeholder="Search for software..." 
+			placeholder={queryChips.length === 0 ? "Search for software..." : "Add another keyword..."} 
 			value={inputQuery}
 			oninput={handleInput}
+			onkeydown={handleInputKeydown}
 		/>
+		
+		{#if queryChips.length > 0}
+			<div class="query-chips">
+				{#each queryChips as chip, i}
+					<button class="chip" onclick={() => removeChip(i)}>
+						{chip}
+						<span class="remove">✕</span>
+					</button>
+				{/each}
+			</div>
+		{/if}
+
 		<FilterBar />
 	</div>
 	
@@ -177,7 +228,6 @@
 		<!-- svelte-ignore a11y_click_events_have_key_events -->
 		<!-- svelte-ignore a11y_no_static_element_interactions -->
 		<div class="canvas-dimmer" onclick={closeDrawer} transition:fade={{ duration: 200 }}></div>
-		<AppDrawer />
 	{/if}
 </main>
 
@@ -221,6 +271,43 @@
 	.search-input:focus {
 		border-color: var(--color-primary);
 		box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 0 0 2px rgba(59, 130, 246, 0.3);
+	}
+
+	.query-chips {
+		display: flex;
+		gap: 8px;
+		flex-wrap: wrap;
+		justify-content: center;
+		margin-top: 16px;
+	}
+
+	.chip {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 6px 14px;
+		background: rgba(59, 130, 246, 0.15);
+		border: 1px solid rgba(59, 130, 246, 0.4);
+		border-radius: 99px;
+		color: var(--text-main);
+		font-size: 0.9rem;
+		cursor: pointer;
+		transition: all 0.2s ease;
+	}
+
+	.chip:hover {
+		background: rgba(239, 68, 68, 0.15);
+		border-color: rgba(239, 68, 68, 0.4);
+	}
+
+	.chip .remove {
+		font-size: 0.8rem;
+		opacity: 0.7;
+	}
+
+	.chip:hover .remove {
+		opacity: 1;
+		color: #f87171;
 	}
 
 	.content {

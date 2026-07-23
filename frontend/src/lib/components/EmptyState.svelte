@@ -12,6 +12,8 @@
 		url.searchParams.delete('category');
 		goto(url, { keepFocus: true, noScroll: true });
 	}
+
+	const sampleKeywords = ['design', 'video editor', 'windows', 'free', 'prototyping', 'IDE', 'music production'];
 </script>
 
 <div class="empty-state">
@@ -20,9 +22,18 @@
 		<p>Try removing some filters to see more results.</p>
 		<button class="clear-btn" onclick={clearFilters}>Clear Filters</button>
 	{:else}
-		<div class="icon"></div>
-		<h2>Discover the best software</h2>
-		<p>Search for design tools, code editors, and more.</p>
+		<div class="hero-copy">
+			<h2>Find software.</h2>
+			<h2 class="dim">Not websites.</h2>
+			<h2 class="dim">Not articles.</h2>
+			<h2 class="highlight">Just the right tool.</h2>
+		</div>
+		
+		<div class="floating-keywords">
+			{#each sampleKeywords as kw, i}
+				<span class="kw" style="animation-delay: {i * 0.4}s">{kw}</span>
+			{/each}
+		</div>
 	{/if}
 </div>
 
@@ -33,20 +44,58 @@
 		align-items: center;
 		justify-content: center;
 		height: 100%;
-		color: var(--text-muted);
 		text-align: center;
 	}
 
-	.icon {
-		width: 64px;
-		height: 64px;
-		background: var(--bg-surface);
-		border-radius: 16px;
-		margin-bottom: 24px;
-		border: 1px solid var(--border-subtle);
+	.hero-copy {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		margin-bottom: 48px;
 	}
 
-	h2, h3 {
+	.hero-copy h2 {
+		margin: 0;
+		font-size: 2.5rem;
+		font-weight: 700;
+		letter-spacing: -0.03em;
+		color: var(--text-main);
+	}
+
+	.hero-copy .dim {
+		color: var(--text-muted);
+		opacity: 0.5;
+	}
+
+	.hero-copy .highlight {
+		color: var(--color-primary);
+		margin-top: 16px;
+	}
+
+	.floating-keywords {
+		display: flex;
+		gap: 16px;
+		flex-wrap: wrap;
+		max-width: 500px;
+		justify-content: center;
+		opacity: 0.6;
+	}
+
+	.kw {
+		background: rgba(255,255,255,0.03);
+		border: 1px solid rgba(255,255,255,0.1);
+		padding: 8px 16px;
+		border-radius: 99px;
+		color: var(--text-muted);
+		animation: float 4s ease-in-out infinite alternate;
+	}
+
+	@keyframes float {
+		0% { transform: translateY(0px); }
+		100% { transform: translateY(-10px); }
+	}
+
+	h3 {
 		margin: 0 0 8px 0;
 		color: var(--text-main);
 	}
@@ -56,6 +105,7 @@
 		font-size: 1rem;
 		max-width: 300px;
 		line-height: 1.5;
+		color: var(--text-muted);
 	}
 
 	.clear-btn {
