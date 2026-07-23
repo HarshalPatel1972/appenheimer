@@ -13,11 +13,11 @@ export function calculateLayout(
 	const seed = generateSeed(query);
 	const random = mulberry32(seed);
 
-	const cardWidth = 260;
-	const cardHeight = 84;
+	const cardWidth = 120;
+	const cardHeight = 120;
 	
 	// Increase padding for a wider spread
-	const padX = 80;
+	const padX = 60;
 	const padY = 60;
 	const cellW = cardWidth + padX;
 	const cellH = cardHeight + padY;
@@ -92,11 +92,17 @@ export function calculateLayout(
 		const jitterX = (random() * 70) - 35;
 		const jitterY = (random() * 70) - 35;
 		
+		const targetX = centerX + pos.x + jitterX;
+		const targetY = centerY + pos.y + jitterY;
+		
+		const clampedX = Math.max(20, Math.min(canvasWidth - cardWidth - 20, targetX));
+		const clampedY = Math.max(20, Math.min(canvasHeight - cardHeight - 20, targetY));
+		
 		placed.push({
 			app: results[i],
 			layout: {
-				x: centerX + pos.x + jitterX,
-				y: centerY + pos.y + jitterY,
+				x: clampedX,
+				y: clampedY,
 				width: cardWidth,
 				height: cardHeight
 			}

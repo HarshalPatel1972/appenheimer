@@ -73,8 +73,8 @@
 		}
 	});
 
-	let targetX = $derived(isActive ? (centerX - 400) : (result.layout.x + repulsionX));
-	let targetY = $derived(isActive ? (centerY - 300) : (result.layout.y + repulsionY));
+	let targetX = $derived(isActive ? (centerX - 60) : (detailsStore.activeAppId ? (result.layout.x < centerX ? -500 : 2500) : (result.layout.x + repulsionX)));
+	let targetY = $derived(isActive ? (centerY) : (detailsStore.activeAppId ? result.layout.y : (result.layout.y + repulsionY)));
 
 	function constellation(node: HTMLElement, { delay = 0, duration = 1200 }) {
 		const targetX = result.layout.x;
@@ -101,7 +101,7 @@
 	class:dimmed={isDimmed}
 	class:down={isDown}
 	class:active={isActive}
-	style="transform: translate({targetX}px, {targetY}px) scale({isHovered ? 1.05 : 1});"
+	style="transform: translate({targetX}px, {targetY}px) scale({isHovered ? 1.05 : 1}); opacity: {detailsStore.activeAppId && !isActive ? 0 : 1}; pointer-events: {detailsStore.activeAppId && !isActive ? 'none' : 'auto'};"
 	tabindex="0"
 	in:constellation={{ delay: Math.random() * 200 }}
 	onmouseenter={handleEnter}
@@ -110,22 +110,21 @@
 	onblur={handleLeave}
 	onclick={handleClick}
 >
+	<div class="card-content">
+		<div class="icon-container">
+			{#if !iconError}
+				<img src={getIconUrl(result.app.icon, result.app.name)} alt={result.app.name} class="icon-img" onerror={() => iconError = true} />
+			{:else}
+				<div class="icon-fallback">{result.app.name.charAt(0)}</div>
+			{/if}
+		</div>
+		<div class="title-section">
+			<h3>{result.app.name}</h3>
+		</div>
+	</div>
+
 	{#if isActive}
 		<AppDetailsView app={result.app} details={detailsStore.appDetails} />
-	{:else}
-		<div class="card-content">
-			<div class="icon-container">
-				{#if !iconError}
-					<img src={getIconUrl(result.app.icon, result.app.name)} alt={result.app.name} class="icon-img" onerror={() => iconError = true} />
-				{:else}
-					<div class="icon-fallback">{result.app.name.charAt(0)}</div>
-				{/if}
-			</div>
-			<div class="details">
-				<h3>{result.app.name}</h3>
-				<p>{result.app.description || 'Application'}</p>
-			</div>
-		</div>
 	{/if}
 </li>
 
@@ -134,20 +133,18 @@
 		position: absolute;
 		top: 0;
 		left: 0;
-		width: 260px;
-		height: 84px;
+		width: 120px;
+		height: 120px;
 		list-style: none;
 		background: var(--bg-surface);
-		border: 1px solid var(--border-subtle);
-		border-radius: 12px;
+		border: 2px solid var(--border-subtle);
 		padding: 16px;
 		box-sizing: border-box;
 		cursor: pointer;
-		box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-		transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), 
+		box-shadow: 4px 4px 0 rgba(0,0,0,1);
+		transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), 
 					width 0.4s cubic-bezier(0.22, 1, 0.36, 1), 
 					height 0.4s cubic-bezier(0.22, 1, 0.36, 1),
-					border-radius 0.4s ease,
 					border-color 0.2s ease, 
 					opacity 0.4s ease, 
 					filter 0.4s ease, 
@@ -157,30 +154,27 @@
 	}
 	
 	.result-card.active {
-		width: 800px;
-		height: 600px;
 		z-index: 1000;
 		cursor: default;
-		border-radius: 24px;
-		box-shadow: 0 24px 64px rgba(0,0,0,0.2);
-		background: var(--bg-canvas); /* slightly different background for expanded view */
-		border-color: var(--border-subtle);
+		background: transparent;
+		border: none;
+		box-shadow: none;
+		overflow: visible;
 	}
 
 	.result-card:focus-visible {
 		border-color: var(--color-primary);
-		box-shadow: 0 0 0 2px var(--bg-surface), 0 0 0 4px var(--color-primary);
+		box-shadow: 4px 4px 0 var(--color-primary);
 	}
 	
 	.result-card.hovered {
 		border-color: var(--color-primary);
 		z-index: 10;
-		box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+		box-shadow: 6px 6px 0 var(--color-primary);
 	}
 	
 	.result-card.dimmed {
-		opacity: 0.15;
-		filter: blur(5px) grayscale(0.5);
+		filter: grayscale(1);
 	}
 	
 	.result-card.down {
@@ -193,21 +187,23 @@
 	
 	.card-content {
 		display: flex;
+		flex-direction: column;
 		align-items: center;
-		gap: 14px;
+		justify-content: center;
+		gap: 12px;
 		height: 100%;
 	}
 	
 	.icon-container {
-		width: 48px;
-		height: 48px;
+		width: 52px;
+		height: 52px;
 		flex-shrink: 0;
-		border-radius: 10px;
 		overflow: hidden;
 		background: var(--bg-primary);
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		border: 1px solid var(--border-subtle);
 	}
 	
 	.icon-img {
@@ -223,27 +219,21 @@
 		text-transform: uppercase;
 	}
 	
-	.details {
-		flex: 1;
+	.title-section {
+		width: 100%;
+		text-align: center;
 		overflow: hidden;
 	}
 	
-	.details h3 {
+	.title-section h3 {
 		margin: 0;
-		font-size: 1rem;
+		font-size: 0.9rem;
 		font-weight: 600;
 		color: var(--text-main);
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
-	}
-	
-	.details p {
-		margin: 4px 0 0;
-		font-size: 0.85rem;
-		color: var(--text-muted);
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
 	}
 </style>

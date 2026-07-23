@@ -159,7 +159,7 @@
 <svelte:window onkeydown={handleKeydown} />
 
 <main class="app-main">
-	<div class="search-bar-container">
+	<div class="search-bar-container" class:is-active={!!detailsStore.activeAppId}>
 		<input 
 			type="text" 
 			class="search-input" 
@@ -188,11 +188,7 @@
 		{/if}
 	</div>
 
-	{#if detailsStore.activeAppId}
-		<!-- svelte-ignore a11y_click_events_have_key_events -->
-		<!-- svelte-ignore a11y_no_static_element_interactions -->
-		<div class="canvas-dimmer" onclick={closeDrawer} transition:fade={{ duration: 200 }}></div>
-	{/if}
+
 </main>
 
 <style>
@@ -217,25 +213,31 @@
 		max-width: 600px;
 		padding: 0 16px;
 		box-sizing: border-box;
-		transition: top 0.4s ease, transform 0.4s ease;
+		transition: top 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+	}
+	
+	.search-bar-container.is-active {
+		transform: translate(20px, -50%); /* Slide slightly to the right to sit beside the logo */
 	}
 
 	.search-input {
 		width: 100%;
 		padding: 16px 24px;
-		border-radius: 99px;
-		border: 1px solid var(--border-subtle);
+		border: 3px solid var(--border-subtle);
 		background: var(--bg-surface);
 		color: var(--text-main);
-		font-size: 1.1rem;
-		box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-		transition: border-color 0.2s, box-shadow 0.2s;
+		font-size: 1.2rem;
+		font-weight: 700;
+		box-shadow: 6px 6px 0 rgba(0,0,0,1);
+		transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
 		outline: none;
+		border-radius: 0;
 	}
 
 	.search-input:focus {
 		border-color: var(--color-primary);
-		box-shadow: 0 8px 24px rgba(0,0,0,0.1), 0 0 0 2px rgba(37, 99, 235, 0.2);
+		box-shadow: 6px 6px 0 var(--color-primary);
+		transform: translate(-2px, -2px);
 	}
 
 	.content {

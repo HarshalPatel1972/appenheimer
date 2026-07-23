@@ -83,17 +83,20 @@
 	}
 
 	.kw {
-		background: rgba(255,255,255,0.03);
-		border: 1px solid rgba(255,255,255,0.1);
+		background: var(--bg-surface);
+		border: 2px solid var(--border-subtle);
 		padding: 8px 16px;
-		border-radius: 99px;
+		font-family: var(--font-mono);
+		font-weight: 600;
+		text-transform: uppercase;
+		box-shadow: 4px 4px 0 rgba(0,0,0,1);
 		color: var(--text-muted);
 		animation: float 4s ease-in-out infinite alternate;
 	}
 
 	@keyframes float {
-		0% { transform: translateY(0px); }
-		100% { transform: translateY(-10px); }
+		0% { transform: translateY(0px) rotate(-1deg); }
+		100% { transform: translateY(-10px) rotate(1deg); }
 	}
 
 	h3 {
@@ -113,15 +116,17 @@
 		margin-top: 24px;
 		padding: 10px 20px;
 		background: var(--bg-surface);
-		border: 1px solid var(--border-subtle);
+		border: 2px solid var(--border-subtle);
 		color: var(--text-main);
-		border-radius: 8px;
+		box-shadow: 4px 4px 0 rgba(0,0,0,1);
 		cursor: pointer;
-		font-weight: 500;
+		font-weight: 700;
+		text-transform: uppercase;
 		transition: all 0.2s ease;
 	}
 
 	.clear-btn:hover {
-		background: rgba(255,255,255,0.1);
+		transform: translate(-2px, -2px);
+		box-shadow: 6px 6px 0 var(--color-primary);
 	}
 </style>

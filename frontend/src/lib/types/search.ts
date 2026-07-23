@@ -10,9 +10,11 @@ export interface AppResult {
 export interface AppDetails extends AppResult {
 	developer: string;
 	websiteUrl: string;
+	longDescription?: string;
 	pricing: string[];
 	platforms: string[];
 	screenshots: string[];
+	tags?: string[];
 }
 
 export interface SearchFilters {

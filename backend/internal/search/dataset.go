@@ -606,29 +606,29 @@ var Dataset = []App{
 func GetAppDetails(id string) (*AppDetails, bool) {
 	for _, app := range Dataset {
 		if app.ID == id {
-			// Mocking rich data
 			developer := "Open Source"
 			website := "https://example.com"
 			screenshots := []string{}
+			longDesc := app.Description
 
 			if id == "app-figma" {
 				developer = "Figma, Inc."
 				website = "https://figma.com"
-
+				longDesc = "Figma is a collaborative web application for interface design, with additional offline features enabled by desktop applications for macOS and Windows. The feature set of Figma focuses on use in user interface and user experience design, with an emphasis on real-time collaboration. It provides tools for vector graphics editing, prototyping, and design systems."
 				screenshots = []string{"https://placehold.co/600x400?text=Figma+1", "https://placehold.co/600x400?text=Figma+2"}
 			} else if id == "app-vscode" {
 				developer = "Microsoft"
 				website = "https://code.visualstudio.com"
-
+				longDesc = "Visual Studio Code is a streamlined code editor with support for development operations like debugging, task running, and version control. It aims to provide just the tools a developer needs for a quick code-build-debug cycle and leaves more complex workflows to fuller featured IDEs, such as Visual Studio IDE."
 				screenshots = []string{"https://placehold.co/600x400?text=VSCode+1"}
 			}
 
 			return &AppDetails{
-				App:        app,
-				Developer:  developer,
-				WebsiteURL: website,
-
-				Screenshots: screenshots,
+				App:             app,
+				Developer:       developer,
+				WebsiteURL:      website,
+				LongDescription: longDesc,
+				Screenshots:     screenshots,
 			}, true
 		}
 	}

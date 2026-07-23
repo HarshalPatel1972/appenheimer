@@ -124,24 +124,28 @@
 	
 	.filter-pill {
 		background: var(--bg-surface);
-		border: 1px solid var(--border-subtle);
+		border: 2px solid var(--border-subtle);
 		color: var(--text-muted);
-		border-radius: 99px;
 		padding: 4px 12px;
 		font-size: 0.8rem;
+		font-weight: 600;
+		font-family: var(--font-mono);
 		cursor: pointer;
 		transition: all 0.2s ease;
-		text-transform: capitalize;
+		text-transform: uppercase;
+		box-shadow: 2px 2px 0 rgba(0,0,0,1);
 	}
 	
 	.filter-pill:hover {
-		background: rgba(0,0,0,0.05);
+		transform: translate(-1px, -1px);
+		box-shadow: 3px 3px 0 var(--color-primary);
 	}
 	
 	.filter-pill.active {
-		background: var(--color-primary);
-		border-color: var(--color-primary);
-		color: white;
+		background: var(--text-main);
+		border-color: var(--text-main);
+		color: var(--bg-surface);
+		box-shadow: 2px 2px 0 var(--color-primary);
 	}
 	
 	.active-filters {
@@ -149,11 +153,13 @@
 		align-items: center;
 		gap: 12px;
 		background: var(--bg-surface);
-		padding: 6px 16px;
-		border-radius: 99px;
+		padding: 8px 16px;
 		font-size: 0.85rem;
-		border: 1px solid var(--border-subtle);
-		box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+		font-family: var(--font-mono);
+		font-weight: 600;
+		border: 2px solid var(--border-subtle);
+		box-shadow: 4px 4px 0 rgba(0,0,0,1);
+		text-transform: uppercase;
 	}
 	
 	.count {
