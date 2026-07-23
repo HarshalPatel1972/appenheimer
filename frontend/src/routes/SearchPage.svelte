@@ -244,14 +244,15 @@
 
 	.search-bar-container {
 		position: absolute;
-		top: 32px;
+		top: 50%;
 		left: 50%;
-		transform: translateX(-50%);
+		transform: translate(-50%, -50%);
 		z-index: 100;
 		width: 100%;
 		max-width: 600px;
 		padding: 0 16px;
 		box-sizing: border-box;
+		transition: top 0.4s ease, transform 0.4s ease;
 	}
 
 	.search-input {

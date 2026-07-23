@@ -44,6 +44,7 @@
 
 	let repulsionX = $state(0);
 	let repulsionY = $state(0);
+	let iconError = $state(false);
 	
 	$effect(() => {
 		if (hoverStore.hoveredApp && !isHovered && hoverStore.anchorRect && cardElement) {
@@ -112,7 +113,13 @@
 		<AppDetailsView app={result.app} details={detailsStore.appDetails} />
 	{:else}
 		<div class="card-content">
-			<div class="icon"></div>
+			<div class="icon-container">
+				{#if result.app.icon && !iconError}
+					<img src={result.app.icon} alt={result.app.name} class="icon-img" onerror={() => iconError = true} />
+				{:else}
+					<div class="icon-fallback">{result.app.name.charAt(0)}</div>
+				{/if}
+			</div>
 			<div class="details">
 				<h3>{result.app.name}</h3>
 				<p>{result.app.description || 'Application'}</p>
@@ -189,12 +196,29 @@
 		height: 100%;
 	}
 	
-	.icon {
+	.icon-container {
 		width: 48px;
 		height: 48px;
-		background: var(--bg-primary);
-		border-radius: 10px;
 		flex-shrink: 0;
+		border-radius: 10px;
+		overflow: hidden;
+		background: var(--bg-primary);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	
+	.icon-img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.icon-fallback {
+		font-size: 1.5rem;
+		font-weight: 700;
+		color: var(--text-main);
+		text-transform: uppercase;
 	}
 	
 	.details {

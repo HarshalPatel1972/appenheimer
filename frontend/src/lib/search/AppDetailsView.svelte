@@ -2,12 +2,17 @@
 	import type { AppResult, AppDetails } from '$lib/types/search';
 	
 	let { app, details }: { app: AppResult, details: AppDetails | null } = $props();
+	let iconError = $state(false);
 </script>
 
 <div class="app-details-radial">
 	<div class="center-piece">
-		<div class="logo">
-			<!-- Large Logo Placeholder -->
+		<div class="logo-container">
+			{#if app.icon && !iconError}
+				<img src={app.icon} alt={app.name} class="logo-img" onerror={() => iconError = true} />
+			{:else}
+				<div class="logo-fallback">{app.name.charAt(0)}</div>
+			{/if}
 		</div>
 		<h2>{app.name}</h2>
 		<p class="developer">{details?.developer || 'Unknown Developer'}</p>
@@ -116,13 +121,30 @@
 		z-index: 2;
 	}
 
-	.logo {
+	.logo-container {
 		width: 100px;
 		height: 100px;
 		background: var(--color-primary);
 		border-radius: 24px;
 		box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
 		margin-bottom: 16px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		overflow: hidden;
+	}
+
+	.logo-img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.logo-fallback {
+		font-size: 3rem;
+		font-weight: 800;
+		color: #fff;
+		text-transform: uppercase;
 	}
 
 	.center-piece h2 {
