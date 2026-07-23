@@ -190,6 +190,7 @@
 					<img src={getIconUrl(activeApp.icon, activeApp.name)} alt={activeApp.name} class="active-icon-img" />
 				</div>
 				<span class="active-app-title">{activeApp.name}</span>
+				<button class="close-btn" onclick={closeDrawer} aria-label="Close app details">✕</button>
 			</div>
 		{/if}
 
@@ -300,6 +301,24 @@
 		color: var(--text-main);
 		text-transform: uppercase;
 		letter-spacing: 0.05em;
+	}
+
+	.close-btn {
+		background: transparent;
+		border: 1.5px solid var(--border-subtle);
+		color: var(--text-main);
+		font-weight: 800;
+		font-size: 0.85rem;
+		cursor: pointer;
+		padding: 2px 8px;
+		margin-left: 4px;
+		transition: all 0.2s ease;
+	}
+
+	.close-btn:hover {
+		background: var(--color-primary);
+		color: #ffffff;
+		border-color: var(--color-primary);
 	}
 
 	.search-bar-wrapper {
