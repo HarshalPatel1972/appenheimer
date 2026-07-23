@@ -257,4 +257,32 @@
 	.status-degraded { color: #f59e0b; }
 	.status-outage { color: #ef4444; }
 	.status-maintenance { color: #3b82f6; }
+
+	@media (max-width: 900px) {
+		.scattered-details-container {
+			position: fixed;
+			top: 80px;
+			left: 0;
+			width: 100vw;
+			height: calc(100vh - 80px);
+			overflow-y: auto;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 16px;
+			padding: 16px;
+			box-sizing: border-box;
+			z-index: 100;
+		}
+
+		.quadrant {
+			position: relative;
+			top: auto !important;
+			left: auto !important;
+			right: auto !important;
+			bottom: auto !important;
+			width: 100%;
+			max-width: 500px !important;
+		}
+	}
 </style>
