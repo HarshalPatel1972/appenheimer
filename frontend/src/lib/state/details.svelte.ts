@@ -8,10 +8,17 @@ export class DetailsState {
 
 export const detailsStore = new DetailsState();
 
-if (typeof sessionStorage !== 'undefined') {
-	const savedAppId = sessionStorage.getItem('appenheimer_active_app');
-	if (savedAppId) {
-		detailsStore.activeAppId = savedAppId;
+if (typeof window !== 'undefined' && typeof sessionStorage !== 'undefined') {
+	const urlParams = new URLSearchParams(window.location.search);
+	const urlAppId = urlParams.get('app');
+	
+	if (urlAppId) {
+		detailsStore.activeAppId = urlAppId;
+	} else if (!window.location.search) {
+		const savedAppId = sessionStorage.getItem('appenheimer_active_app');
+		if (savedAppId) {
+			detailsStore.activeAppId = savedAppId;
+		}
 	}
 	
 	$effect.root(() => {
